@@ -1,0 +1,29 @@
+{
+  "HELLO_WORD": "Hello word",
+  "DATA_NOT_FOUND": "Data not found",
+  "CAT_NOT_FOUND": "Cat not found",
+  "DELETED_SUCCESSFULLY": "Deleted successfully.",
+  "INVALID_EMAIL": "Email is invalid.",
+  "EMAIL_EXIST": "Email existed.",
+  "INCORRECT_EMAIL_OR_PASSWORD": "Password or email is incorrect.",
+  "ROLE_NOT_FOUND": "Role not found.",
+  "CODE_INCORRECT_OR_EXPIRED": "Code is incorrect or expired.",
+  "INVALID_REFRESH_TOKEN": "Refresh token is invalid.",
+  "REFRESH_TOKEN_EXPIRE": "Refresh token expired",
+  "SUCCESSFULLY": "Successfully",
+  "RESET_PASSWORD_SENT": "Your reset password request has been confirmed. Check your email.",
+  "PASSWORD_TOKEN_EXPIRE": "Your password token is expired.",
+  "NEW_PASSWORD_DIFFERENT_OLD_PASSWORD": "New password must be different from the last old password.",
+  "RESET_PASSWORD_SUCCESSFULLY": "Reset password successfully.",
+  "TOKEN_INVALID": "Token is invalid",
+  "INVALID_USER_TYPE": "You must be parent or student to register account.",
+  "REQUESTED_VERIFY_TUTOR_SUCCESSFULLY": "Your submission has been sent and will be reviewed. We will contact via email soon!",
+  "VERIFIED_TUTOR_SUCCESSFULLY": "Verified tutor successfully",
+  "TUTOR_ALREADY_EXIST": "Tutor already exist",
+  "REQUEST_DO_NOT_EXIST": "Request verification tutor do not exist",
+  "REJECT_TUTOR": "Reject tutor",
+
+  "SHARE_EVENT": {
+    "COMMON_ERR_NOT_FOUND": "{0.obj} not found"
+  }
+}

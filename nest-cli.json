@@ -1,0 +1,18 @@
+{
+  "language": "ts",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src/main",
+  "compilerOptions": {
+    "plugins": ["@nestjs/graphql"],
+    "assets": ["i18n/**/*"]
+  },
+  "generateOptions": {
+    "spec": {
+      "class": false,
+      "component": false,
+      "module": false,
+      "controller": false,
+      "service": true
+    }
+  }
+}
