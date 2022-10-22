@@ -51,10 +51,8 @@ async function bootstrap() {
       ? (Logger.log(`🤬  Application is running on: ${await app.getUrl()}`, 'NestJS', false),
         Logger.log(`🚀  Server ready at http://${domain}:${port}`, 'Bootstrap', false),
         Logger.log(`##########################################################`, 'Bootstrap', false),
-        Logger.warn(`🚀  Health Check http://${domain}:${port}/health`, 'Bootstrap', false),
         Logger.warn(`🚀  Admin Server http://${domain}:${port}/admin`, 'Bootstrap', false),
         Logger.warn(`🚀  Client Server http://${domain}:${port}/client`, 'Bootstrap', false),
-        Logger.warn(`🚀  Public Server http://${domain}:${port}/public`, 'Bootstrap', false),
         Logger.log(`##########################################################`, 'Bootstrap', false))
       : Logger.log(`🚀  Server is listening on port ${port}`, 'Bootstrap', false);
   } catch (error) {

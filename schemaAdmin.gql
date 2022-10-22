@@ -1,0 +1,181 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input ChangePasswordInput {
+  newPassword: String!
+  password: String!
+}
+
+input CodeVerifyDto {
+  email: String!
+  verifyCode: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input FilterDto {
+  data: String
+  field: String!
+  operator: QUERY_OPERATOR!
+}
+
+enum Gender {
+  FEMALE
+  MALE
+  NON_BINARY
+}
+
+type IUser {
+  avatar: String
+  companyId: ID
+  createdAt: DateTime
+  email: String!
+  fullName: String!
+  gender: Gender!
+  googleId: String
+  id: ID!
+  isActive: Boolean!
+  password: String!
+  phoneNumber: String
+  role: Role!
+  roleId: ID!
+  updatedAt: DateTime
+}
+
+type IUsers {
+  items: [IUser!]!
+  meta: MetaPaginationInterface!
+}
+
+type LoginResponse {
+  email: String!
+  fullName: String!
+  id: ID!
+  refreshToken: String!
+  token: String!
+}
+
+type MetaPaginationInterface {
+  currentPage: Float!
+  itemCount: Float!
+  itemsPerPage: Float!
+  totalItems: Float!
+  totalPages: Float!
+}
+
+type Mutation {
+  changePassword(changePasswordInput: ChangePasswordInput!): ResponseMessageBase!
+  refreshToken(input: RefreshTokenDto!): RefreshResponse!
+  resendCodeVerify(input: ResendCodeVerifyDto!): ResponseMessageBase!
+  signIn(input: SignInDto!): LoginResponse!
+  signInGoogle(input: SignInGoogle!): LoginResponse!
+  signOut(input: SignOutDto!): ResponseMessageBase!
+  signUp(input: SignUpDto!): ResponseMessageBase!
+  updateMe(input: UserUpdateInput!): IUser!
+  verifyCode(input: CodeVerifyDto!): LoginResponse!
+}
+
+enum QUERY_OPERATOR {
+  eq
+  gt
+  gte
+  in
+  isNotNull
+  isNull
+  like
+  lt
+  lte
+  neq
+  nin
+  unaccentLike
+}
+
+type Query {
+  getMe: IUser!
+  getUser(id: ID!): IUser!
+  getUsers(queryParams: QueryFilterDto!): IUsers!
+}
+
+input QueryFilterDto {
+  "\n- Filter equal: filters:[{field: \"User.name\", operator: eq, data: \"Enouvo\"}]\n- Filter not equal: filters:[{field: \"User.name\", operator: neq, data: \"Enouvo\"}]\n- Filter less than: filters:[{field: \"User.age\", operator: lt, data: 40}]\n- Filter greater than: filters:[{field: \"User.age\", operator: gt, data: 40}]\n- Filter less than and equal: filters:[{field: \"User.age\", operator: lte, data: 40}]\n- Filter greater than and equal: filters:[{field: \"User.age\", operator: gte, data: 40}]\n- Filter field in many choice: filters:[{field: \"User.name\", operator: in, data: \"EnouvoSpace,Enosta\"}]\n- Filter field not in many choice: filters:[{field: \"User.name\", operator: nin, data: \"EnouvoSpace,Enosta\"}]\n- Filter field by text: filters:[{field: \"User.name\", operator: like, data: \"Enouvo\"}]"
+  filters: [FilterDto!]
+
+  "\n- Paginate with limit and offset. Ex: limit:10, page:1\n"
+  limit: Float = 10
+
+  "\n- Order by fields and order reverse use prefix \"ASC or DESC\". Ex: orderBy: \"User.createdAt:DESC\"\n- Use NULLS_FIRST OR NULLS_LAST to determine where null value should be, Ex: orderBy: \"User.createdAt:DESC:NULLS_FIRST\"\n"
+  orderBy: String
+
+  "\n- Paginate with limit and offset. Ex: limit:10, page:1\n"
+  page: Float = 1
+
+  "\n- Query by text. Ex: q:\"abcxyz\"\n"
+  q: String
+}
+
+enum ROLE {
+  ADMIN
+  EMPLOYER
+  USER
+}
+
+type RefreshResponse {
+  accessToken: String!
+}
+
+input RefreshTokenDto {
+  refreshToken: String!
+}
+
+input ResendCodeVerifyDto {
+  email: String!
+}
+
+type ResponseMessageBase {
+  message: String!
+  success: Boolean!
+}
+
+type Role {
+  createdAt: DateTime
+  id: ID!
+  name: ROLE!
+  updatedAt: DateTime
+}
+
+input SignInDto {
+  email: String!
+  password: String!
+}
+
+input SignInGoogle {
+  fullName: String
+  idToken: String!
+  phoneNumber: String
+  roleId: ID!
+}
+
+input SignOutDto {
+  refreshToken: String!
+}
+
+input SignUpDto {
+  email: String!
+  fullName: String!
+  gender: Gender
+  password: String!
+  phoneNumber: String
+  role: ROLE!
+}
+
+input UserUpdateInput {
+  avatar: String
+  firstName: String
+  gender: Gender
+  lastName: String
+  phoneNumber: String
+}

@@ -1,7 +1,6 @@
-import { extendMoment } from 'moment-range';
 import { random } from 'lodash';
 import moment, * as Moment from 'moment';
-
+import { extendMoment } from 'moment-range';
 import { nanoid } from 'nanoid';
 import slug from 'slug';
 

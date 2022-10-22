@@ -1,7 +1,8 @@
 import jsonwebtoken from 'jsonwebtoken';
 import { assign } from 'lodash';
-import { configuration } from 'src/config';
 import { ObjectLiteral } from 'typeorm';
+
+import { configuration } from '@/config';
 
 export class Jwt {
   private static secret = configuration.jwt.secretKey;

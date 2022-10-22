@@ -1,8 +1,8 @@
 import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
-import { isNil } from 'lodash';
-import uniq from 'lodash/uniq';
-import { CACHE_NAMESPACE, RedisClientSingleton } from 'src/services/redis/redis';
+import { isNil, uniq } from 'lodash';
 import { getManager } from 'typeorm';
+
+import { CACHE_NAMESPACE, RedisClientSingleton } from '@/services/redis/redis';
 
 @ValidatorConstraint({})
 export class EntityExistingValidator implements ValidatorConstraintInterface {

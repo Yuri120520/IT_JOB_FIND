@@ -1,12 +1,14 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CustomBaseEntity } from './../../common/base/baseEntity';
+import { Permission } from './Permission';
 import { Role } from './Role';
 
 @ObjectType({ isAbstract: true })
-export class Permission extends CustomBaseEntity {
+@Entity('role_permission')
+export class RolePermission extends CustomBaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: string;

@@ -1,9 +1,10 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
 
 @ObjectType({ isAbstract: true })
+@Entity('permission')
 export class Permission extends CustomBaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()

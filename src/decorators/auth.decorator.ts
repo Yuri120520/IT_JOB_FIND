@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/guards/auth.guard';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { RolesGuard } from 'src/guards/roles.guard';
+
+import { JwtAuthGuard } from '@/guards/auth.guard';
+import { PermissionGuard } from '@/guards/permission.guard';
+import { RolesGuard } from '@/guards/roles.guard';
 
 export function Auth(scopes?: string[]) {
   if (scopes && scopes.length > 0) {

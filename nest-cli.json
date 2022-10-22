@@ -3,8 +3,7 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src/main",
   "compilerOptions": {
-    "plugins": ["@nestjs/graphql"],
-    "assets": ["i18n/**/*"]
+    "plugins": ["@nestjs/graphql"]
   },
   "generateOptions": {
     "spec": {

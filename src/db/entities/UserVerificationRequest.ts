@@ -1,12 +1,13 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import GraphQLJSON from 'graphql-type-json';
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
 import { UserVerificationRequestType } from '@/common/constant';
 
 @ObjectType({ isAbstract: true })
-export class Permission extends CustomBaseEntity {
+@Entity('user_verification_request')
+export class UserVerificationRequest extends CustomBaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: string;
@@ -24,7 +25,7 @@ export class Permission extends CustomBaseEntity {
   code: string;
 
   @Field(() => Date)
-  @Column({ type: 'datetime' })
+  @CreateDateColumn()
   expirationTime: Date;
 
   @Field(() => UserVerificationRequestType)

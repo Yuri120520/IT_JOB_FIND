@@ -1,8 +1,9 @@
-import { User } from '@/db/entities/User';
 import { PaginationInterface } from '@enouvo-packages/base-nestjs-api';
 import { ObjectType } from '@nestjs/graphql';
 
-@ObjectType({ isAbstract: false })
+import { User } from '@/db/entities/User';
+
+@ObjectType({ isAbstract: true })
 export class IUser extends User {}
 
 @ObjectType({ isAbstract: true })

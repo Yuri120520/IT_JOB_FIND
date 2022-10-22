@@ -21,12 +21,12 @@ export class CreateTokenTable1665939935624 implements MigrationInterface {
           },
           {
             name: 'access_token',
-            type: 'varchar(255)',
+            type: 'text',
             isNullable: false
           },
           {
             name: 'refresh_token',
-            type: 'varchar(255)',
+            type: 'text',
             isNullable: false
           },
           {

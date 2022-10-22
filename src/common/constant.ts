@@ -14,13 +14,6 @@ export const contentTypes = [
 export const SQS_API_VERSION = '2012-11-05';
 export const DEFAULT_DELAY_IN_SECONDS = 0;
 
-export enum PLATFORM {
-  WEB = 'WEB',
-  IOS = 'IOS',
-  ANDROID = 'ANDROID',
-  ADMIN = 'ADMIN'
-}
-
 export const APP_ENV = {
   LOCAL: 'local',
   STAGING: 'staging',
@@ -41,8 +34,9 @@ export enum ROLE {
 }
 
 export enum EmailType {
-  SEND_INVITATION = 'INVITATION',
-  SEND_MAIL_VERIFY_CODE = 'SEND_MAIL_VERIFY_CODE'
+  SEND_MAIL_INVITATION = 'SEND_MAIL_INVITATION',
+  SEND_MAIL_VERIFY_CODE = 'SEND_MAIL_VERIFY_CODE',
+  SEND_MAIL_RESET_PASSWORD = 'SEND_MAIL_RESET_PASSWORD'
 }
 
 export enum Gender {

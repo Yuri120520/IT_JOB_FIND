@@ -1,12 +1,15 @@
 import { getJoinRelation } from '@enouvo-packages/base-nestjs-api';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Role } from './Role';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
 import { Gender } from '@/common/constant';
 
 @ObjectType({ isAbstract: true })
+@Entity('user')
 export class User extends CustomBaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
@@ -14,11 +17,7 @@ export class User extends CustomBaseEntity {
 
   @Field()
   @Column()
-  firstName: string;
-
-  @Field()
-  @Column()
-  lastName: string;
+  fullName: string;
 
   @Field()
   @Column()
@@ -52,8 +51,17 @@ export class User extends CustomBaseEntity {
   @Column()
   isActive: boolean;
 
+  @Field({ nullable: true })
+  @Column()
+  phoneNumber: string;
+
+  @Field(() => Role)
+  @ManyToOne(() => Role)
+  @JoinColumn({ name: 'role_id' })
+  role: Role;
+
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
-    const fields = [];
+    const fields = [['role']];
     return getJoinRelation(info, fields, withPagination, forceInclude);
   }
 }

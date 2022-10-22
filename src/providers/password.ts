@@ -1,7 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import * as bcryptjs from 'bcryptjs';
-import { configuration } from 'src/config';
-import { messageKey } from 'src/i18n';
+
+import { configuration } from '@/config';
+import { messageKey } from '@/i18n';
 
 export class PasswordUtil {
   static async generateHash(password: string): Promise<string> {
