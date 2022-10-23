@@ -4,6 +4,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import { join } from 'path';
 
+import { UserAdminModule } from './user/user.module';
+
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -18,8 +20,9 @@ import { join } from 'path';
         };
         return graphQLFormattedError;
       },
-      include: []
-    })
+      include: [UserAdminModule]
+    }),
+    UserAdminModule
   ]
 })
 export class AdminModule {}

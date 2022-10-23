@@ -14,11 +14,15 @@ import {
   SignInDto,
   SignInGoogle,
   SignOutDto,
-  SignUpDto
+  SignUpDto,
+  SignUpForEmployerDto
 } from './dto';
 import { SendCodeVerifyInput } from './interface';
 
 import { ROLE, UserVerificationRequestType } from '@/common/constant';
+import { Company } from '@/db/entities/Company';
+import { CompanyAddress } from '@/db/entities/CompanyAddress';
+import { CompanySkill } from '@/db/entities/CompanySkill';
 import { Role } from '@/db/entities/Role';
 import { Token } from '@/db/entities/Token';
 import { User } from '@/db/entities/User';
@@ -34,31 +38,28 @@ export class AuthService {
 
   constructor(private userService: UserService) {}
 
-  async SignUp(input: SignUpDto) {
-    const { email, password, role } = input;
-
-    if (role === ROLE.ADMIN) {
-      throw new BadRequestException(messageKey.BASE.EMAIL_EXIST);
-    }
+  async SignUp(input: SignUpDto | SignUpForEmployerDto, role: ROLE.EMPLOYER | ROLE.USER) {
+    const { email, password } = input;
 
     const user = await GetUserQuery.getOneByEmail(email, false);
 
     if (user) {
       throw new BadRequestException(messageKey.BASE.EMAIL_EXIST);
     }
-    const { id } = await Role.findOne({ name: role });
+
     const hashPassword = await PasswordUtil.generateHash(password);
 
     return AuthService.sendCodeVerify({
       ...input,
       password: hashPassword,
-      roleId: id
+      role
     });
   }
 
   static async sendCodeVerify(input: SendCodeVerifyInput, transaction?: EntityManager) {
     const trx = transaction ?? getManager();
-    const { email, fullName } = input;
+    const { email } = input;
+    const name = input.role === ROLE.USER ? input.fullName : input.companyName;
 
     const verifyCode = String(random(100000, 999999));
     const expirationTime = dayjs(new Date()).add(5, 'minutes').toDate();
@@ -71,7 +72,7 @@ export class AuthService {
 
     await trx.getRepository(UserVerificationRequest).save(userVerificationRequest);
 
-    await emailService.sendEmailVerify(email, fullName, verifyCode);
+    await emailService.sendEmailVerify(email, name, verifyCode);
 
     return {
       success: true,
@@ -124,9 +125,39 @@ export class AuthService {
     }
 
     return await getManager().transaction(async transaction => {
-      user = User.create({ ...data, isActive: true });
+      console.log('object', data);
+      const role = await Role.findOne({ name: data.role });
+      if (role.name === ROLE.USER) {
+        const { email, password, phoneNumber, fullName, gender } = data;
+        user = User.create({ email, password, phoneNumber, fullName, gender, roleId: role.id, isActive: true });
+        await transaction.getRepository(User).save(user);
+      }
 
-      await transaction.getRepository(User).save(user);
+      if (role.name === ROLE.EMPLOYER) {
+        const { email, password, companyAddress, companySkillIds, companyName, phoneNumber } = data;
+
+        const newUser = await transaction
+          .getRepository(User)
+          .create({ email, password, phoneNumber, roleId: role.id, isActive: true });
+        user = await transaction.getRepository(User).save(newUser);
+
+        const newCompany = await transaction.getRepository(Company).create({ name: companyName, userId: user.id });
+        const company = await transaction.getRepository(Company).save(newCompany);
+
+        const newCompanyAddress = await transaction
+          .getRepository(CompanyAddress)
+          .create({ companyId: company.id, detail: companyAddress });
+
+        await transaction.getRepository(CompanyAddress).save(newCompanyAddress);
+
+        for (const skill of companySkillIds) {
+          const newCompanySkill = await transaction
+            .getRepository(CompanySkill)
+            .create({ companyId: company.id, skillId: skill });
+
+          await transaction.getRepository(CompanySkill).save(newCompanySkill);
+        }
+      }
 
       return await this.generateUserWithAccessToken(user, transaction);
     });

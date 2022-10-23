@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsEmail, IsEnum, IsString, Validate } from 'class-validator';
+import { ArrayNotEmpty, ArrayUnique, IsArray, IsEmail, IsEnum, IsString, Validate } from 'class-validator';
 
-import { Gender, ROLE } from '@/common/constant';
+import { Gender } from '@/common/constant';
 import { EntityExistingValidator } from '@/decorators/entityExistingValidator.decorator';
 import { PasswordValidator } from '@/providers/validation/passwordValidator';
 
@@ -25,10 +25,6 @@ export class SignUpDto {
   @Field(() => Gender, { nullable: true })
   @IsEnum(Gender)
   gender: Gender;
-
-  @Field(() => ROLE)
-  @IsEnum(ROLE)
-  role: ROLE;
 }
 
 @InputType()
@@ -100,4 +96,31 @@ export class SignInGoogle {
   @Field({ nullable: true })
   @IsString()
   phoneNumber?: string;
+}
+
+@InputType()
+export class SignUpForEmployerDto {
+  @Field()
+  @IsEmail()
+  email: string;
+
+  @Field()
+  @Validate(PasswordValidator)
+  password: string;
+
+  @Field()
+  phoneNumber: string;
+
+  @Field()
+  companyName: string;
+
+  @Field(() => [ID])
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayUnique()
+  @Validate(EntityExistingValidator, ['skill'])
+  companySkillIds: string[];
+
+  @Field()
+  companyAddress: string;
 }

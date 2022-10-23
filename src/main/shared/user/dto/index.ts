@@ -1,5 +1,5 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { Field, ID, InputType } from '@nestjs/graphql';
+import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 
 import { Gender } from '@/common/constant';
 
@@ -34,4 +34,14 @@ export class ChangePasswordInput {
 
   @Field()
   newPassword: string;
+}
+
+@InputType()
+export class ChangeStatusOfUserInput {
+  @Field(() => ID)
+  @IsUUID()
+  userId: string;
+
+  @Field(() => Boolean)
+  isActive: boolean;
 }

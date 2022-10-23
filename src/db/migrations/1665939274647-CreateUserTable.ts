@@ -2,7 +2,7 @@ import { Gender } from '@/common/constant';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 const TABLE_NAME = 'user';
-export class CreateUserTable1665939293876 implements MigrationInterface {
+export class CreateUserTable1665939274647 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -58,11 +58,6 @@ export class CreateUserTable1665939293876 implements MigrationInterface {
             isNullable: true
           },
           {
-            name: 'company_id',
-            type: 'uuid',
-            isNullable: true
-          },
-          {
             name: 'is_active',
             type: 'boolean',
             default: 'false',
@@ -85,13 +80,6 @@ export class CreateUserTable1665939293876 implements MigrationInterface {
             referencedColumnNames: ['id'],
             referencedTableName: 'role',
             name: 'FK_role_id',
-            onDelete: 'SET NULL'
-          },
-          {
-            columnNames: ['company_id'],
-            referencedTableName: 'company',
-            referencedColumnNames: ['id'],
-            name: 'FK_company_id',
             onDelete: 'SET NULL'
           }
         ]

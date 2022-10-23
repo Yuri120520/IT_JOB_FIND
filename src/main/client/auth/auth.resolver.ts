@@ -12,7 +12,8 @@ import {
   SignInDto,
   SignInGoogle,
   SignOutDto,
-  SignUpDto
+  SignUpDto,
+  SignUpForEmployerDto
 } from '@/main/shared/auth/dto';
 import { LoginResponse, RefreshResponse } from '@/main/shared/auth/interface';
 import { ChangePasswordInput } from '@/main/shared/user/dto';
@@ -41,6 +42,11 @@ export class AuthClientResolver {
   @Mutation(() => ResponseMessageBase, { name: `signUp` })
   async signUp(@Args('input') input: SignUpDto) {
     return await this.service.signUp(input);
+  }
+
+  @Mutation(() => ResponseMessageBase, { name: `signUpForEmployer` })
+  async signUpForEmployer(@Args('input') input: SignUpForEmployerDto) {
+    return await this.service.signUpForEmployer(input);
   }
 
   @Mutation(() => ResponseMessageBase, { name: `resendCodeVerify` })

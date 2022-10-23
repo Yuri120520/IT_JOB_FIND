@@ -1,11 +1,17 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
+import { Gender, ROLE } from '@/common/constant';
+
 export interface SendCodeVerifyInput {
   email: string;
   password: string;
-  fullName: string;
+  fullName?: string;
   phoneNumber?: string;
-  roleId?: string;
+  gender?: Gender;
+  role: ROLE;
+  companyName?: string;
+  companySkillIds?: string[];
+  companyAddress?: string;
 }
 
 @ObjectType({ isAbstract: true })
