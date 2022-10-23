@@ -2,7 +2,7 @@ import { BaseService } from '@enouvo-packages/base-nestjs-api';
 import { Injectable } from '@nestjs/common';
 
 import { ChangePasswordInput, UserUpdateInput } from './dto';
-import { IUser, IUsers } from './interface';
+import { IUser } from './interface';
 import { GetUserQuery } from './query/getUser.query';
 
 import { ResponseMessageBase } from '@/common/interfaces/returnBase';
@@ -12,7 +12,7 @@ import { messageKey } from '@/i18n';
 import { PasswordUtil } from '@/providers/password';
 
 @Injectable()
-export class UserService extends BaseService<IUsers, IUser> {
+export class UserService extends BaseService<User> {
   constructor() {
     super(User);
   }

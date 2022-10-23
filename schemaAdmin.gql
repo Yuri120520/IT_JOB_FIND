@@ -2,14 +2,9 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input ChangePasswordInput {
-  newPassword: String!
-  password: String!
-}
-
-input CodeVerifyDto {
-  email: String!
-  verifyCode: String!
+input ChangeStatusOfUserInput {
+  isActive: Boolean!
+  userId: ID!
 }
 
 """
@@ -31,32 +26,19 @@ enum Gender {
 
 type IUser {
   avatar: String
-  companyId: ID
-  createdAt: DateTime
   email: String!
-  fullName: String!
-  gender: Gender!
-  googleId: String
+  fullName: String
+  gender: Gender
   id: ID!
   isActive: Boolean!
-  password: String!
   phoneNumber: String
   role: Role!
   roleId: ID!
-  updatedAt: DateTime
 }
 
 type IUsers {
   items: [IUser!]!
   meta: MetaPaginationInterface!
-}
-
-type LoginResponse {
-  email: String!
-  fullName: String!
-  id: ID!
-  refreshToken: String!
-  token: String!
 }
 
 type MetaPaginationInterface {
@@ -68,15 +50,8 @@ type MetaPaginationInterface {
 }
 
 type Mutation {
-  changePassword(changePasswordInput: ChangePasswordInput!): ResponseMessageBase!
-  refreshToken(input: RefreshTokenDto!): RefreshResponse!
-  resendCodeVerify(input: ResendCodeVerifyDto!): ResponseMessageBase!
-  signIn(input: SignInDto!): LoginResponse!
-  signInGoogle(input: SignInGoogle!): LoginResponse!
-  signOut(input: SignOutDto!): ResponseMessageBase!
-  signUp(input: SignUpDto!): ResponseMessageBase!
+  changeStatusOfUser(input: ChangeStatusOfUserInput!): IUser!
   updateMe(input: UserUpdateInput!): IUser!
-  verifyCode(input: CodeVerifyDto!): LoginResponse!
 }
 
 enum QUERY_OPERATOR {
@@ -123,53 +98,11 @@ enum ROLE {
   USER
 }
 
-type RefreshResponse {
-  accessToken: String!
-}
-
-input RefreshTokenDto {
-  refreshToken: String!
-}
-
-input ResendCodeVerifyDto {
-  email: String!
-}
-
-type ResponseMessageBase {
-  message: String!
-  success: Boolean!
-}
-
 type Role {
   createdAt: DateTime
   id: ID!
   name: ROLE!
   updatedAt: DateTime
-}
-
-input SignInDto {
-  email: String!
-  password: String!
-}
-
-input SignInGoogle {
-  fullName: String
-  idToken: String!
-  phoneNumber: String
-  roleId: ID!
-}
-
-input SignOutDto {
-  refreshToken: String!
-}
-
-input SignUpDto {
-  email: String!
-  fullName: String!
-  gender: Gender
-  password: String!
-  phoneNumber: String
-  role: ROLE!
 }
 
 input UserUpdateInput {

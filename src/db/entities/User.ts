@@ -15,7 +15,7 @@ export class User extends CustomBaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   fullName: string;
 
@@ -23,7 +23,7 @@ export class User extends CustomBaseEntity {
   @Column()
   email: string;
 
-  @Field(() => Gender)
+  @Field(() => Gender, { nullable: true })
   @Column({ type: 'enum', enum: Gender })
   gender: Gender;
 
@@ -42,10 +42,6 @@ export class User extends CustomBaseEntity {
   @Field({ nullable: true })
   @Column()
   googleId: string;
-
-  @Field(() => ID, { nullable: true })
-  @Column()
-  companyId: string;
 
   @Field(() => Boolean, { defaultValue: false })
   @Column()

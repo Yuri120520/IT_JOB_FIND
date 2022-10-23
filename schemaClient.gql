@@ -31,19 +31,14 @@ enum Gender {
 
 type IUser {
   avatar: String
-  companyId: ID
-  createdAt: DateTime
   email: String!
-  fullName: String!
-  gender: Gender!
-  googleId: String
+  fullName: String
+  gender: Gender
   id: ID!
   isActive: Boolean!
-  password: String!
   phoneNumber: String
   role: Role!
   roleId: ID!
-  updatedAt: DateTime
 }
 
 type IUsers {
@@ -75,6 +70,7 @@ type Mutation {
   signInGoogle(input: SignInGoogle!): LoginResponse!
   signOut(input: SignOutDto!): ResponseMessageBase!
   signUp(input: SignUpDto!): ResponseMessageBase!
+  signUpForEmployer(input: SignUpForEmployerDto!): ResponseMessageBase!
   updateMe(input: UserUpdateInput!): IUser!
   verifyCode(input: CodeVerifyDto!): LoginResponse!
 }
@@ -169,7 +165,15 @@ input SignUpDto {
   gender: Gender
   password: String!
   phoneNumber: String
-  role: ROLE!
+}
+
+input SignUpForEmployerDto {
+  companyAddress: String!
+  companyName: String!
+  companySkillIds: [ID!]!
+  email: String!
+  password: String!
+  phoneNumber: String!
 }
 
 input UserUpdateInput {

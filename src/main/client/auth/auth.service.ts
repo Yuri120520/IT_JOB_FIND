@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { ROLE } from '@/common/constant';
 import { AuthService } from '@/main/shared/auth/auth.service';
 import {
   CodeVerifyDto,
@@ -8,7 +9,8 @@ import {
   SignInDto,
   SignInGoogle,
   SignOutDto,
-  SignUpDto
+  SignUpDto,
+  SignUpForEmployerDto
 } from '@/main/shared/auth/dto';
 
 @Injectable()
@@ -28,7 +30,11 @@ export class AuthClientService {
   }
 
   async signUp(input: SignUpDto) {
-    return this.authService.SignUp(input);
+    return this.authService.SignUp(input, ROLE.USER);
+  }
+
+  async signUpForEmployer(input: SignUpForEmployerDto) {
+    return this.authService.SignUp(input, ROLE.EMPLOYER);
   }
 
   async resendCodeVerify(input: ResendCodeVerifyDto) {

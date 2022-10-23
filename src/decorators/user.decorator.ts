@@ -3,11 +3,10 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthenticationError } from 'apollo-server-express';
 
 import { User } from '@/db/entities/User';
-import { IUser } from '@/main/shared/user/interface';
 import { CACHE_NAMESPACE, RedisClientSingleton } from '@/services/redis/redis';
 
 export interface Context {
-  currentUser: IUser; //Later change to User type
+  currentUser: User; //Later change to User type
   IPAddress?: string;
   AccessToken: string;
   Platform: string;

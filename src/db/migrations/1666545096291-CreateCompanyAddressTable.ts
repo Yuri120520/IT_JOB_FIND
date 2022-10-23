@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-const TABLE_NAME = 'company';
-export class CreateCompanyTable1665939284647 implements MigrationInterface {
+const TABLE_NAME = 'company_address';
+export class CreateCompanyAddressTable1666545096291 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -15,47 +15,14 @@ export class CreateCompanyTable1665939284647 implements MigrationInterface {
             isPrimary: true
           },
           {
-            name: 'user_id',
+            name: 'company_id',
             type: 'uuid',
-            isNullable: false,
-            isUnique: true
-          },
-          {
-            name: 'name',
-            type: 'varchar(255)',
             isNullable: false
           },
           {
-            name: 'website',
-            type: 'varchar(255)',
-            isNullable: true
-          },
-          {
-            name: 'description',
+            name: 'detail',
             type: 'text',
-            isNullable: true
-          },
-          {
-            name: 'size',
-            type: 'integer',
-            isNullable: true
-          },
-          {
-            name: 'benefits',
-            type: 'jsonb',
-            isNullable: true
-          },
-          {
-            name: 'images',
-            type: 'text',
-            isArray: true,
-            isNullable: true
-          },
-          {
-            name: 'certificates',
-            type: 'text',
-            isArray: true,
-            isNullable: true
+            isNullable: false
           },
           {
             name: 'created_at',
@@ -70,10 +37,10 @@ export class CreateCompanyTable1665939284647 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            columnNames: ['user_id'],
+            columnNames: ['company_id'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'user',
-            name: 'FK_user_id',
+            referencedTableName: 'company',
+            name: 'FK_company_id',
             onDelete: 'CASCADE'
           }
         ]

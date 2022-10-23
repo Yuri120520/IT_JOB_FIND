@@ -5,11 +5,13 @@ import { configuration } from '@/config';
 import { AdminModule } from '@/main/admin/admin.module';
 import { ClientModule } from '@/main/client/client.module';
 import { DatabaseModule } from '@/modules/database.module';
+import { I18n_Module } from '@/modules/i18n.module';
 import { JwtStrategy } from '@/providers/strategies/jwt.strategy';
 
 @Module({
   imports: [
     DatabaseModule,
+    I18n_Module,
     AdminModule,
     ClientModule,
     JwtModule.register({
