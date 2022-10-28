@@ -37,3 +37,4 @@ lerna-debug.log*
 # enviroment
 .env
 .npmrc 
+*.gql
