@@ -27,9 +27,12 @@ export const GetContext = createParamDecorator(async (data: unknown, context: Ex
     CACHE_NAMESPACE.PersonContext,
     user.email,
     async () =>
-      await User.findOne({
-        where: { email: user.email }
-      }),
+      await User.findOne(
+        {
+          email: user.email
+        },
+        { relations: ['role'] }
+      ),
     10
   );
 

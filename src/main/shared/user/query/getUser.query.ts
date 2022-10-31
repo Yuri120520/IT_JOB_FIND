@@ -25,9 +25,14 @@ export class GetUserQuery {
   //   return user;
   // }
 
-  static async getUserById(id: string, throwErrorIfNotExists = true, transaction?: EntityManager) {
+  static async getUserById(
+    id: string,
+    throwErrorIfNotExists = true,
+    transaction?: EntityManager,
+    relations?: string[]
+  ) {
     const trx = transaction ?? getManager();
-    const user = trx.getRepository(User).findOne({ id });
+    const user = trx.getRepository(User).findOne({ id }, { relations });
 
     if (!user && throwErrorIfNotExists) {
       throw new BadRequestException(messageKey.BASE.DATA_NOT_FOUND);
