@@ -1,8 +1,9 @@
 import { getJoinRelation } from '@enouvo-packages/base-nestjs-api';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
+import { Company } from './Company';
 import { Role } from './Role';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
@@ -56,8 +57,12 @@ export class User extends CustomBaseEntity {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
+  @Field(() => Company, { nullable: true })
+  @OneToOne(() => Company, company => company.user)
+  company: Company;
+
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
-    const fields = [['role']];
+    const fields = [['role'], ['company']];
     return getJoinRelation(info, fields, withPagination, forceInclude);
   }
 }

@@ -50,3 +50,9 @@ export enum UserVerificationRequestType {
   CHANGE_PASSWORD = 'Change password',
   RESET_PASSWORD = 'Reset password'
 }
+
+export enum SalaryUnit {
+  WEEK = 'WEEK',
+  MONTH = 'MONTH',
+  YEAR = 'YEAR'
+}

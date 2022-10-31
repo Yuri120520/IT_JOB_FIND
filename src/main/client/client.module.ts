@@ -6,6 +6,7 @@ import { join } from 'path';
 
 import { UserModule } from '../shared/user/user.module';
 import { AuthClientModule } from './auth/auth.module';
+import { JobClientModule } from './job/job.module';
 
 @Module({
   imports: [
@@ -21,10 +22,11 @@ import { AuthClientModule } from './auth/auth.module';
         };
         return graphQLFormattedError;
       },
-      include: [UserModule, AuthClientModule]
+      include: [UserModule, AuthClientModule, JobClientModule]
     }),
     UserModule,
-    AuthClientModule
+    AuthClientModule,
+    JobClientModule
   ]
 })
 export class ClientModule {}
