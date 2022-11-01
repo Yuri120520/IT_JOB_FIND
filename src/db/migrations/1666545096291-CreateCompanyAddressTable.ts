@@ -43,7 +43,8 @@ export class CreateCompanyAddressTable1666545096291 implements MigrationInterfac
             name: 'FK_company_id',
             onDelete: 'CASCADE'
           }
-        ]
+        ],
+        uniques: [{ columnNames: ['company_id', 'detail'], name: 'UNQ_company_id_detail' }]
       })
     );
   }

@@ -1,11 +1,11 @@
 import { getJoinRelation } from '@enouvo-packages/base-nestjs-api';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { GraphQLJSON } from 'graphql-type-json';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CompanyAddress } from './CompanyAddress';
 import { CompanySkill } from './CompanySkill';
+import { Job } from './Job';
 import { User } from './User';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
@@ -38,9 +38,9 @@ export class Company extends CustomBaseEntity {
   @Column({ type: 'int4' })
   size: number;
 
-  @Field(() => GraphQLJSON, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
-  benefits: JSON;
+  @Field(() => [String], { nullable: true })
+  @Column({ type: 'text', array: true, nullable: true })
+  benefits: string[];
 
   @Field(() => [String], { nullable: true })
   @Column({ type: 'text', array: true, nullable: true })
@@ -64,6 +64,11 @@ export class Company extends CustomBaseEntity {
   @OneToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @Field(() => [Job], { nullable: true })
+  @OneToMany(() => Job, job => job.company)
+  @JoinColumn({ name: 'id' })
+  jobs: Job[];
 
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
     const fields = [

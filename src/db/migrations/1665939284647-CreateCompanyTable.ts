@@ -42,7 +42,8 @@ export class CreateCompanyTable1665939284647 implements MigrationInterface {
           },
           {
             name: 'benefits',
-            type: 'jsonb',
+            type: 'text',
+            isArray: true,
             isNullable: true
           },
           {

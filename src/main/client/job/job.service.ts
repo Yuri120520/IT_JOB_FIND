@@ -9,6 +9,7 @@ import { JobAddress } from '@/db/entities/JobAddress';
 import { JobLevel } from '@/db/entities/JobLevel';
 import { JobSkill } from '@/db/entities/JobSkill';
 import { messageKey } from '@/i18n';
+import { CompanyService } from '@/main/shared/company/company.service';
 import { JobService } from '@/main/shared/job/job.service';
 import { GetUserQuery } from '@/main/shared/user/query/getUser.query';
 
@@ -17,11 +18,11 @@ export class JobClientService extends JobService {
   async upsertJob(userId: string, input: UpsertJobDto) {
     return await getManager().transaction(async transaction => {
       const { addressIds, levelIds, skillIds, ...data } = input;
-      const user = await GetUserQuery.getUserById(userId, true, transaction, ['company']);
+      const company = await CompanyService.getOneByUserId(userId, true, transaction);
 
       const job = input.id
         ? await JobService.getOneById(input.id, transaction, false)
-        : await transaction.getRepository(Job).save(Job.create({ companyId: user?.company.id }));
+        : await transaction.getRepository(Job).save(Job.create({ companyId: company.id }));
 
       if (addressIds) {
         if (input.id) {

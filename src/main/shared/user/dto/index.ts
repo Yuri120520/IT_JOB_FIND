@@ -7,11 +7,7 @@ import { Gender } from '@/common/constant';
 export class UserUpdateInput {
   @Field({ nullable: true })
   @IsOptional()
-  firstName: string;
-
-  @Field({ nullable: true })
-  @IsOptional()
-  lastName: string;
+  fullName: string;
 
   @Field({ nullable: true })
   @IsOptional()
