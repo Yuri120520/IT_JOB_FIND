@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import { join } from 'path';
 
+import { CompanyModule } from '../shared/company/company.module';
 import { JobAdminModule } from './job/job.module';
 import { UserAdminModule } from './user/user.module';
 
@@ -21,10 +22,11 @@ import { UserAdminModule } from './user/user.module';
         };
         return graphQLFormattedError;
       },
-      include: [UserAdminModule, JobAdminModule]
+      include: [UserAdminModule, JobAdminModule, CompanyModule]
     }),
     UserAdminModule,
-    JobAdminModule
+    JobAdminModule,
+    CompanyModule
   ]
 })
 export class AdminModule {}
