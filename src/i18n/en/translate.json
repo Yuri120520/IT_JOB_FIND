@@ -23,6 +23,7 @@
   "REQUEST_DO_NOT_EXIST": "Request verification tutor do not exist",
   "REJECT_TUTOR": "Reject tutor",
   "UPDATE_JOB_STATUS_NOT_CORRECT": "Status invalid.",
+  "JOB_IS_APPLIED": "You have applied this job.",
 
   "SHARE_EVENT": {
     "COMMON_ERR_NOT_FOUND": "{0.obj} not found"

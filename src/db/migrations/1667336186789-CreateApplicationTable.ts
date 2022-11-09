@@ -2,7 +2,7 @@ import { name } from 'faker';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 const TABLE_NAME = 'application';
-export class CreateApplicationTable1667335119941 implements MigrationInterface {
+export class CreateApplicationTable1667336186789 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -16,7 +16,7 @@ export class CreateApplicationTable1667335119941 implements MigrationInterface {
             isPrimary: true
           },
           {
-            name: 'job_id',
+            name: 'user_job_id',
             type: 'uuid',
             isNullable: false
           },
@@ -24,6 +24,16 @@ export class CreateApplicationTable1667335119941 implements MigrationInterface {
             name: 'CV_id',
             type: 'uuid',
             isNullable: false
+          },
+          {
+            name: 'description',
+            type: 'text',
+            isNullable: true
+          },
+          {
+            name: 'reply_data',
+            type: 'jsonb',
+            isNullable: true
           },
           {
             name: 'is_accepted',
@@ -43,17 +53,17 @@ export class CreateApplicationTable1667335119941 implements MigrationInterface {
         ],
         uniques: [
           {
-            columnNames: ['job_id', 'CV_id'],
-            name: 'UNQ_job_id_CV_id'
+            columnNames: ['user_job_id'],
+            name: 'UNQ_user_job_id'
           }
         ],
         foreignKeys: [
           {
-            columnNames: ['job_id'],
+            columnNames: ['user_job_id'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'job',
+            referencedTableName: 'user_job',
             onDelete: 'CASCADE',
-            name: 'FK_job_id'
+            name: 'FK_user_job_id'
           },
           {
             columnNames: ['CV_id'],
