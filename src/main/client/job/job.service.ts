@@ -1,13 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { getManager } from 'typeorm';
 
-import { UpsertJobDto } from './dto';
+import { ReplyApplicationDto, UpsertJobDto } from './dto';
 
 import { ResponseMessageBase } from '@/common/interfaces/returnBase';
+import { Application } from '@/db/entities/Application';
 import { Job } from '@/db/entities/Job';
 import { JobAddress } from '@/db/entities/JobAddress';
 import { JobLevel } from '@/db/entities/JobLevel';
 import { JobSkill } from '@/db/entities/JobSkill';
+import { UserJob } from '@/db/entities/UserJob';
 import { messageKey } from '@/i18n';
 import { CompanyService } from '@/main/shared/company/company.service';
 import { JobService } from '@/main/shared/job/job.service';
@@ -20,6 +22,13 @@ export class JobClientService extends JobService {
       const { addressIds, levelIds, skillIds, ...data } = input;
       const company = await CompanyService.getOneByUserId(userId, true, transaction);
 
+      if (input.id) {
+        const userJob = await UserJob.findOne({ jobId: input.id, isApplied: true });
+
+        if (userJob) {
+          throw new BadRequestException(messageKey.BASE.NOT_UPDATE_JOB);
+        }
+      }
       const job = input.id
         ? await JobService.getOneById(input.id, transaction, false)
         : await transaction.getRepository(Job).save(Job.create({ companyId: company.id }));
@@ -78,8 +87,36 @@ export class JobClientService extends JobService {
     }
 
     // implement get application for job.  if have application, cant deletes
+    const userJob = await UserJob.findOne({ jobId, isApplied: true });
+
+    if (userJob) {
+      throw new BadRequestException(messageKey.BASE.NOT_DELETE_JOB);
+    }
 
     await Job.createQueryBuilder().delete().where('id = :jobId', { jobId });
+    return { message: messageKey.BASE.SUCCESSFULLY, success: true };
+  }
+
+  async replyApplication(userId: string, input: ReplyApplicationDto) {
+    const { id, isAccept, interview, message } = input;
+    const application = await Application.findOne(
+      { id },
+      { relations: ['userJob', 'userJob.job', 'userJob.job.company', 'userJob.job.company.user'] }
+    );
+
+    if (application.userJob.job.company.user.id !== userId) {
+      throw new BadRequestException(messageKey.BASE.YOU_ARE_NOT_THIS_JOB_OWNER);
+    }
+
+    if (application.replyData) {
+      throw new BadRequestException(messageKey.BASE.APPLICATION_IS_REPLIED);
+    }
+
+    application.isAccepted = isAccept;
+    application.replyData = { message, interview };
+
+    await Application.save(application);
+
     return { message: messageKey.BASE.SUCCESSFULLY, success: true };
   }
 }
