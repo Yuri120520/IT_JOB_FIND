@@ -9,7 +9,7 @@ import { Roles } from '@/decorators/roles.decorator';
 import { IJob } from '@/main/shared/job/interface';
 
 @Roles(ROLE.ADMIN)
-@Auth(['Role'])
+@Auth(['Roles'])
 @Resolver()
 export class JobAdminResolver {
   constructor(private service: JobAdminService) {}

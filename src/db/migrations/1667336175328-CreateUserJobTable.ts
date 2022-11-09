@@ -1,5 +1,4 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { UserJobStatus } from '../entities/UserJob';
 
 const TABLE_NAME = 'user_job';
 export class CreateUserJobTable1667336175328 implements MigrationInterface {
@@ -26,10 +25,14 @@ export class CreateUserJobTable1667336175328 implements MigrationInterface {
             isNullable: false
           },
           {
-            name: 'status',
-            type: 'enum',
-            enum: Object.values(UserJobStatus),
-            isNullable: false
+            name: 'is_following',
+            type: 'boolean',
+            default: false
+          },
+          {
+            name: 'is_applied',
+            type: 'boolean',
+            default: false
           },
           {
             name: 'created_at',

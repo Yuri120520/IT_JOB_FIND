@@ -7,6 +7,7 @@ import { Company } from './Company';
 import { JobAddress } from './JobAddress';
 import { JobLevel } from './JobLevel';
 import { JobSkill } from './JobSkill';
+import { UserJob } from './UserJob';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
 import { SalaryUnit } from '@/common/constant';
@@ -115,6 +116,11 @@ export class Job extends CustomBaseEntity {
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
+  @Field(() => [UserJob], { nullable: true })
+  @OneToMany(() => UserJob, userJob => userJob.job)
+  @JoinColumn({ name: 'id' })
+  userJobs: UserJob[];
+
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
     const fields = [
       ['company'],
@@ -123,7 +129,9 @@ export class Job extends CustomBaseEntity {
       ['skills'],
       ['skills', 'skill'],
       ['levels'],
-      ['levels', 'level']
+      ['levels', 'level'],
+      ['userJobs'],
+      ['userJobs', 'application']
     ];
     return getJoinRelation(info, fields, withPagination, forceInclude);
   }

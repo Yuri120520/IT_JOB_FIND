@@ -9,6 +9,7 @@ import { SkillModule } from '../shared/skill/skill.module';
 import { UserModule } from '../shared/user/user.module';
 import { AuthClientModule } from './auth/auth.module';
 import { CompanyClientModule } from './company/company.module';
+import { CVClientModule } from './cv/cv.module';
 import { JobClientModule } from './job/job.module';
 import { UserJobModule } from './userJob/userJob.module';
 
@@ -33,7 +34,8 @@ import { UserJobModule } from './userJob/userJob.module';
         CompanyClientModule,
         UserJobModule,
         SkillModule,
-        LevelModule
+        LevelModule,
+        CVClientModule
       ]
     }),
     UserModule,
@@ -42,7 +44,8 @@ import { UserJobModule } from './userJob/userJob.module';
     CompanyClientModule,
     UserJobModule,
     SkillModule,
-    LevelModule
+    LevelModule,
+    CVClientModule
   ]
 })
 export class ClientModule {}
