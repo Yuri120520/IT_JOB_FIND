@@ -17,13 +17,12 @@
   "RESET_PASSWORD_SUCCESSFULLY": "Reset password successfully.",
   "TOKEN_INVALID": "Token is invalid",
   "INVALID_USER_TYPE": "You must be parent or student to register account.",
-  "REQUESTED_VERIFY_TUTOR_SUCCESSFULLY": "Your submission has been sent and will be reviewed. We will contact via email soon!",
-  "VERIFIED_TUTOR_SUCCESSFULLY": "Verified tutor successfully",
-  "TUTOR_ALREADY_EXIST": "Tutor already exist",
-  "REQUEST_DO_NOT_EXIST": "Request verification tutor do not exist",
-  "REJECT_TUTOR": "Reject tutor",
   "UPDATE_JOB_STATUS_NOT_CORRECT": "Status invalid.",
   "JOB_IS_APPLIED": "You have applied this job.",
+  "NOT_DELETE_JOB": "This job has application. Can't delete it.",
+  "NOU_UPDATE_JOB": "This job has application. Can't update it.",
+  "YOU_ARE_NOT_THIS_JOB_OWNER": "You aren't this job owner so you don't have permission to reply this application.",
+  "APPLICATION_IS_REPLIED": "This application is replied.",
 
   "SHARE_EVENT": {
     "COMMON_ERR_NOT_FOUND": "{0.obj} not found"

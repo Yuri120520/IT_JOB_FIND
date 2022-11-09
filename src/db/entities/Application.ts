@@ -20,7 +20,7 @@ export class InterViewEvent {
   @Field(() => InterviewMethod)
   method: InterviewMethod;
 
-  @Field()
+  @Field({ nullable: true })
   address: string;
 }
 @ObjectType({ isAbstract: true })

@@ -35,7 +35,8 @@ import { UserJobModule } from './userJob/userJob.module';
         UserJobModule,
         SkillModule,
         LevelModule,
-        CVClientModule
+        CVClientModule,
+        UserJobModule
       ]
     }),
     UserModule,
@@ -45,7 +46,8 @@ import { UserJobModule } from './userJob/userJob.module';
     UserJobModule,
     SkillModule,
     LevelModule,
-    CVClientModule
+    CVClientModule,
+    UserJobModule
   ]
 })
 export class ClientModule {}

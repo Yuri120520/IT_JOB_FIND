@@ -4,6 +4,7 @@ import {
   ArrayMinSize,
   ArrayNotEmpty,
   ArrayUnique,
+  IsBoolean,
   IsDate,
   IsEnum,
   IsIn,
@@ -16,6 +17,7 @@ import {
 } from 'class-validator';
 
 import { SalaryUnit } from '@/common/constant';
+import { InterviewMethod } from '@/db/entities/Application';
 import { JobStatus, JobType } from '@/db/entities/Job';
 import { EntityExistingValidator } from '@/decorators/entityExistingValidator.decorator';
 
@@ -124,4 +126,49 @@ export class UpsertJobDto {
   @ArrayUnique()
   @IsEnum(JobType, { each: true })
   types: JobType[];
+}
+
+@InputType()
+export class InterviewEventDto {
+  @Field(() => InterviewMethod)
+  @IsEnum(InterviewMethod)
+  method: InterviewMethod;
+
+  @Field({ nullable: true })
+  address: string;
+}
+@InputType()
+export class InterviewResponseDto {
+  @Field(() => Date)
+  @IsDate()
+  startTime: Date;
+
+  @Field(() => Date)
+  @IsDate()
+  endTime: Date;
+
+  @Field(() => [InterviewEventDto])
+  @ValidateNested({ each: true })
+  @Type(() => InterviewEventDto)
+  events: InterviewEventDto[];
+}
+
+@InputType()
+export class ReplyApplicationDto {
+  @Field(() => ID)
+  @Validate(EntityExistingValidator, ['application'])
+  id: string;
+
+  @Field(() => Boolean)
+  @IsBoolean()
+  isAccept: boolean;
+
+  @Field()
+  message: string;
+
+  @Field(() => InterviewResponseDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => InterviewResponseDto)
+  interview: InterviewResponseDto;
 }
