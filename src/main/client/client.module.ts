@@ -6,6 +6,7 @@ import { join } from 'path';
 
 import { LevelModule } from '../shared/level/level.module';
 import { SkillModule } from '../shared/skill/skill.module';
+import { UploadModule } from '../shared/upload/upload.module';
 import { UserModule } from '../shared/user/user.module';
 import { AuthClientModule } from './auth/auth.module';
 import { CompanyClientModule } from './company/company.module';
@@ -36,7 +37,8 @@ import { UserJobModule } from './userJob/userJob.module';
         SkillModule,
         LevelModule,
         CVClientModule,
-        UserJobModule
+        UserJobModule,
+        UploadModule
       ]
     }),
     UserModule,
@@ -47,7 +49,8 @@ import { UserJobModule } from './userJob/userJob.module';
     SkillModule,
     LevelModule,
     CVClientModule,
-    UserJobModule
+    UserJobModule,
+    UploadModule
   ]
 })
 export class ClientModule {}

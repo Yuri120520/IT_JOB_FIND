@@ -10,7 +10,7 @@ import { JobSkill } from './JobSkill';
 import { UserJob } from './UserJob';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
-import { SalaryUnit } from '@/common/constant';
+import { MAX_SALARY } from '@/common/constant';
 
 export enum JobType {
   FULL_TIME = 'Fulltime',
@@ -30,17 +30,11 @@ export class Salary {
   @Field(() => Boolean, { defaultValue: false })
   isNegotiable: boolean;
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => Number, { defaultValue: MAX_SALARY })
   max: number;
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => Number, { defaultValue: 0 })
   min: number;
-
-  @Field(() => SalaryUnit, { defaultValue: SalaryUnit.MONTH })
-  unit: SalaryUnit;
-
-  @Field({ defaultValue: 'USD' })
-  currency: string;
 }
 
 @ObjectType({ isAbstract: true })

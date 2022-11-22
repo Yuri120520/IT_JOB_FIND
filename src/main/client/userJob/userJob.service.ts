@@ -13,6 +13,7 @@ export class UserJobService extends BaseService<UserJob> {
   constructor() {
     super(UserJob);
   }
+
   async upsertUserJob(userId: string, input: UpsertUserJobDto) {
     const { id, ...data } = input;
 
@@ -49,6 +50,16 @@ export class UserJobService extends BaseService<UserJob> {
 
       return { message: messageKey.BASE.SUCCESSFULLY, success: true };
     });
+  }
+
+  async getMyUserJobByJobId(userId: string, jobId: string) {
+    const userJob = await UserJob.findOne({ userId, jobId }, { relations: ['job', 'user'] });
+
+    if (!userJob) {
+      throw new NotFoundException(messageKey.BASE.DATA_NOT_FOUND);
+    }
+
+    return userJob;
   }
 
   static async getOneById(id: string, userId: string, throwErrorIfNotExist = true, transaction = getManager()) {

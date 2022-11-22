@@ -14,6 +14,13 @@ export const configuration = {
   databaseTest: process.env.DATABASE_URL || 'postgresql://postgres:12345678@localhost/it-job-find-db-local',
   redisUrl: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
   sentryKey: process.env.SENTRY_DSN || '',
+  aws: {
+    region: process.env.REGION || 'ap-southeast-1',
+    secretKey: process.env.AWS_SECRET_KEY,
+    accessKey: process.env.AWS_ACCESS_KEY,
+    s3BucketName: process.env.S3_BUCKET,
+    mainQueueUrl: process.env.MAIN_QUEUE_URL
+  },
   jwt: {
     secretKey: process.env.JWT_SECRET || 'it-job-find-2022',
     refreshSecretKey: process.env.JWT_REFRESH_SECRET || 'it-job-find-2022',

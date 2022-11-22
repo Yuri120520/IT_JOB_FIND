@@ -11,7 +11,7 @@ import { Context, GetContext } from '@/decorators/user.decorator';
 import { ICompany } from '@/main/shared/company/interface';
 
 @Roles(ROLE.EMPLOYER)
-@Auth(['Role'])
+@Auth(['Roles'])
 @Resolver()
 export class CompanyClientResolver {
   constructor(private service: CompanyClientService) {}

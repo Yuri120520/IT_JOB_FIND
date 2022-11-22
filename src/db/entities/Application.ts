@@ -1,12 +1,26 @@
 import { getJoinRelation } from '@enouvo-packages/base-nestjs-api';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType } from 'graphql';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CV } from './CV';
 import { UserJob } from './UserJob';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
+
+export const DateScalar = new GraphQLScalarType({
+  name: 'Date',
+  description: 'Accept value as time stamp with timezone in string format',
+  parseValue(value) {
+    return value;
+  },
+  serialize(value) {
+    if (typeof value === 'string') {
+      return new Date(value);
+    }
+    return value;
+  }
+});
 
 export enum InterviewMethod {
   GOOGLE_MEET = 'Google Meet',
@@ -25,10 +39,10 @@ export class InterViewEvent {
 }
 @ObjectType({ isAbstract: true })
 export class InterviewResponse {
-  @Field(() => Date)
+  @Field(() => DateScalar)
   startTime: Date;
 
-  @Field(() => Date)
+  @Field(() => DateScalar)
   endTime: Date;
 
   @Field(() => [InterViewEvent])
@@ -77,7 +91,7 @@ export class Application extends CustomBaseEntity {
 
   @Field(() => CV)
   @ManyToOne(() => CV)
-  @JoinColumn({ name: 'CV_id' })
+  @JoinColumn({ name: 'cv_id' })
   CV: CV;
 
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {

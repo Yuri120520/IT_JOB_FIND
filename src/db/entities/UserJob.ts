@@ -44,8 +44,7 @@ export class UserJob extends CustomBaseEntity {
   user: User;
 
   @Field(() => Application, { nullable: true })
-  @OneToOne(() => Application)
-  @JoinColumn({ name: 'id' })
+  @OneToOne(() => Application, a => a.userJob)
   application: Application;
 
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {

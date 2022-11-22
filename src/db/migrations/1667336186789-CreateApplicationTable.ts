@@ -21,7 +21,7 @@ export class CreateApplicationTable1667336186789 implements MigrationInterface {
             isNullable: false
           },
           {
-            name: 'CV_id',
+            name: 'cv_id',
             type: 'uuid',
             isNullable: false
           },
@@ -66,11 +66,11 @@ export class CreateApplicationTable1667336186789 implements MigrationInterface {
             name: 'FK_user_job_id'
           },
           {
-            columnNames: ['CV_id'],
+            columnNames: ['cv_id'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'CV',
+            referencedTableName: 'cv',
             onDelete: 'CASCADE',
-            name: 'FK_CV_id'
+            name: 'FK_cv_id'
           }
         ]
       })
