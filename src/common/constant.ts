@@ -51,8 +51,5 @@ export enum UserVerificationRequestType {
   RESET_PASSWORD = 'Reset password'
 }
 
-export enum SalaryUnit {
-  WEEK = 'WEEK',
-  MONTH = 'MONTH',
-  YEAR = 'YEAR'
-}
+export const MAX_SALARY = 10000;
+export const MIN_SALARY = 0;

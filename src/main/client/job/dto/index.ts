@@ -8,15 +8,15 @@ import {
   IsDate,
   IsEnum,
   IsIn,
-  IsNumber,
   IsOptional,
+  IsPositive,
   IsUUID,
-  Min,
+  Max,
   Validate,
   ValidateNested
 } from 'class-validator';
 
-import { SalaryUnit } from '@/common/constant';
+import { MAX_SALARY } from '@/common/constant';
 import { InterviewMethod } from '@/db/entities/Application';
 import { JobStatus, JobType } from '@/db/entities/Job';
 import { EntityExistingValidator } from '@/decorators/entityExistingValidator.decorator';
@@ -45,23 +45,14 @@ export class SalaryDto {
 
   @Field(() => Number, { nullable: true })
   @IsOptional()
-  @IsNumber()
-  @Min(0)
+  @IsPositive()
+  @Max(MAX_SALARY)
   max: number;
 
   @Field(() => Number, { nullable: true })
   @IsOptional()
-  @IsNumber()
-  @Min(0)
+  @IsPositive()
   min: number;
-
-  @Field(() => SalaryUnit, { nullable: true })
-  @IsOptional()
-  @IsEnum(SalaryUnit)
-  unit: SalaryUnit;
-
-  @Field({ nullable: true })
-  currency: string;
 }
 @InputType()
 export class UpsertJobDto {

@@ -1,6 +1,7 @@
 {
   "HELLO_WORD": "Hello word",
   "DATA_NOT_FOUND": "Data not found",
+  "NOT_PERMISSION": "You not permission to do action.",
   "CAT_NOT_FOUND": "Cat not found",
   "DELETED_SUCCESSFULLY": "Deleted successfully.",
   "INVALID_EMAIL": "Email is invalid.",
@@ -23,6 +24,8 @@
   "NOU_UPDATE_JOB": "This job has application. Can't update it.",
   "YOU_ARE_NOT_THIS_JOB_OWNER": "You aren't this job owner so you don't have permission to reply this application.",
   "APPLICATION_IS_REPLIED": "This application is replied.",
+  "JOB_IS_FOLLOWING": "You are following this job.",
+  "CV_CAN_NOT_DELETE": "CV is used. This can not delete.",
 
   "SHARE_EVENT": {
     "COMMON_ERR_NOT_FOUND": "{0.obj} not found"

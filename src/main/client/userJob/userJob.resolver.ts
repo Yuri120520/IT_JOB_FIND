@@ -1,5 +1,5 @@
 import { BaseResolver } from '@enouvo-packages/base-nestjs-api';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { ApplyJobDto, UpsertUserJobDto } from './dto';
 import { IUserJob, IUserJobs } from './interface';
@@ -36,5 +36,12 @@ export class UserJobResolver extends BaseResolver<IUserJobs, IUserJob>({
   async applyJob(@Args('input') input: ApplyJobDto, @GetContext() ctx: Context) {
     const { currentUser } = ctx;
     return await this.service.applyJob(currentUser.id, input);
+  }
+  @Roles(ROLE.USER)
+  @Auth(['Roles'])
+  @Query(() => IUserJob, { name: 'getMyUserJobByJobId' })
+  async followJob(@Args('jobId') jobId: string, @GetContext() ctx: Context) {
+    const { currentUser } = ctx;
+    return await this.service.getMyUserJobByJobId(currentUser.id, jobId);
   }
 }

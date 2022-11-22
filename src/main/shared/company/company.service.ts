@@ -1,6 +1,10 @@
-import { BaseService } from '@enouvo-packages/base-nestjs-api';
+import { BaseService, QueryFilterDto } from '@enouvo-packages/base-nestjs-api';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { getManager } from 'typeorm';
+
+import { GenerateFilterResultWithPagination } from '../job/command/generateFilterResultWithPagination';
+import { AttachCompanyFilterCommand } from './command/attachCompanyFilter';
+import { CompanyFilterDto } from './dto';
 
 import { Company } from '@/db/entities/Company';
 import { messageKey } from '@/i18n';
@@ -23,5 +27,18 @@ export class CompanyService extends BaseService<Company> {
       throw new NotFoundException(messageKey.BASE.DATA_NOT_FOUND);
     }
     return company;
+  }
+
+  async searchCompany(filters: CompanyFilterDto, queryParams: QueryFilterDto) {
+    const builder = Company.createQueryBuilder('Company')
+      .leftJoinAndSelect('Company.companyAddresses', 'CompanyAddress')
+      .leftJoinAndSelect('Company.companySkills', 'CompanySkill')
+      .leftJoinAndSelect('CompanySkill.skill', 'Skill')
+      .leftJoinAndSelect('Company.user', 'User')
+      .leftJoinAndSelect('Company.jobs', 'Job')
+      .where(`User.isActive=TRUE`);
+
+    AttachCompanyFilterCommand.addFilterQuery(builder, filters);
+    return GenerateFilterResultWithPagination.execute(builder, queryParams);
   }
 }

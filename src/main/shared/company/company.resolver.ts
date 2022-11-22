@@ -1,8 +1,8 @@
-import { BaseQueryFilter, BaseResolver, QUERY_OPERATOR, QueryFilterDto } from '@enouvo-packages/base-nestjs-api';
-import { Args, Info, Query, Resolver } from '@nestjs/graphql';
-import { GraphQLResolveInfo } from 'graphql';
+import { BaseResolver, QueryFilterDto } from '@enouvo-packages/base-nestjs-api';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 
 import { CompanyService } from './company.service';
+import { CompanyFilterDto } from './dto';
 import { ICompanies, ICompany } from './interface/index';
 
 import { Company } from '@/db/entities/Company';
@@ -18,16 +18,7 @@ export class CompanyResolver extends BaseResolver<ICompanies, ICompany>({
   }
 
   @Query(() => ICompanies, { name: 'getCompanies' })
-  async findAll(@Args('queryParams') queryParams: QueryFilterDto, @Info() info: GraphQLResolveInfo) {
-    return await this.service.findAll(
-      BaseQueryFilter.attachFilters(queryParams, [
-        {
-          field: 'User.isActive',
-          data: 'true',
-          operator: QUERY_OPERATOR.like
-        }
-      ]),
-      info
-    );
+  async findAll(@Args('filters') filters: CompanyFilterDto, @Args('queryParams') queryParams: QueryFilterDto) {
+    return await this.service.searchCompany(filters, queryParams);
   }
 }
