@@ -4,7 +4,7 @@ WORKDIR /opt/app
 RUN yarn global add pm2
 EXPOSE 3000
 
-WORKDIR /the-perfect-score-api
+WORKDIR /IT_JOB_FIND_API
 
 COPY ./package.json .
 COPY ./yarn.lock .
@@ -17,4 +17,4 @@ COPY . .
 RUN yarn build
 RUN rm -f .npmrc 
 
-CMD ["pm2-runtime", "start", "yarn", "--name", "the-perfect-score-api", "--interpreter", "sh", "--", "start"]
+CMD ["pm2-runtime", "start", "yarn", "--name", "IT_JOB_FIND_API", "--interpreter", "sh", "--", "start"]
