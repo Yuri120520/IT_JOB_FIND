@@ -38,7 +38,7 @@ export const GetContext = createParamDecorator(async (data: unknown, context: Ex
 
   if (!currentUser) {
     throw new AuthenticationError(
-      `You do not have a valid authorised account to use this application. Please contact Admin for more information.`
+      `You do not have a valid authorized account to use this application. Please contact Admin for more information.`
     );
   }
 

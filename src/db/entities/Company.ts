@@ -71,7 +71,6 @@ export class Company extends CustomBaseEntity {
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
     const fields = [
       ['companyAddresses'],
-      ['companyAddresses', 'address'],
       ['companySkills'],
       ['companySkills', 'skill'],
       ['user'],

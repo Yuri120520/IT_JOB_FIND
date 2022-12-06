@@ -1,10 +1,11 @@
 import { getJoinRelation } from '@enouvo-packages/base-nestjs-api';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Company } from './Company';
 import { Role } from './Role';
+import { UserJob } from './UserJob';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
 import { Gender } from '@/common/constant';
@@ -61,8 +62,21 @@ export class User extends CustomBaseEntity {
   @OneToOne(() => Company, company => company.user)
   company: Company;
 
+  @Field(() => [UserJob], { nullable: true })
+  @OneToMany(() => UserJob, uj => uj.user)
+  userJobs: UserJob[];
+
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
-    const fields = [['role'], ['company']];
+    const fields = [
+      ['role'],
+      ['company'],
+      ['company', 'companyAddresses'],
+      ['userJobs'],
+      ['userJobs', 'job'],
+      ['userJobs', 'job', 'company'],
+      ['userJobs', 'application'],
+      ['userJobs', 'application', 'CV']
+    ];
     return getJoinRelation(info, fields, withPagination, forceInclude);
   }
 }

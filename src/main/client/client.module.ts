@@ -4,6 +4,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import { join } from 'path';
 
+import { JobAdminModule } from '../admin/job/job.module';
+import { UserAdminModule } from '../admin/user/user.module';
+import { CompanyAddressModule } from '../shared/address/companyAddress.module';
 import { LevelModule } from '../shared/level/level.module';
 import { SkillModule } from '../shared/skill/skill.module';
 import { UploadModule } from '../shared/upload/upload.module';
@@ -38,7 +41,10 @@ import { UserJobModule } from './userJob/userJob.module';
         LevelModule,
         CVClientModule,
         UserJobModule,
-        UploadModule
+        UploadModule,
+        CompanyAddressModule,
+        UserAdminModule,
+        JobAdminModule
       ]
     }),
     UserModule,
@@ -50,7 +56,10 @@ import { UserJobModule } from './userJob/userJob.module';
     LevelModule,
     CVClientModule,
     UserJobModule,
-    UploadModule
+    UploadModule,
+    CompanyAddressModule,
+    UserAdminModule,
+    JobAdminModule
   ]
 })
 export class ClientModule {}

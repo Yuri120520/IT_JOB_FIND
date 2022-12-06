@@ -5,6 +5,7 @@ import { ReplyApplicationDto, UpsertJobDto } from './dto';
 
 import { ResponseMessageBase } from '@/common/interfaces/returnBase';
 import { Application } from '@/db/entities/Application';
+import { CompanyAddress } from '@/db/entities/CompanyAddress';
 import { Job } from '@/db/entities/Job';
 import { JobAddress } from '@/db/entities/JobAddress';
 import { JobLevel } from '@/db/entities/JobLevel';
@@ -22,16 +23,23 @@ export class JobClientService extends JobService {
       const { addressIds, levelIds, skillIds, ...data } = input;
       const company = await CompanyService.getOneByUserId(userId, true, transaction);
 
-      if (input.id) {
+      const job = input.id
+        ? await JobService.getOneById(input.id, transaction, false, ['company', 'company.user'])
+        : await transaction.getRepository(Job).save(Job.create({ companyId: company.id }));
+
+      if (job) {
         const userJob = await UserJob.findOne({ jobId: input.id, isApplied: true });
 
-        if (userJob) {
+        if (
+          userJob &&
+          input.salary &&
+          (input.salary.isNegotiable !== job.salary.isNegotiable ||
+            input.salary.max !== job.salary.max ||
+            job.salary.min !== input.salary.min)
+        ) {
           throw new BadRequestException(messageKey.BASE.NOT_UPDATE_JOB);
         }
       }
-      const job = input.id
-        ? await JobService.getOneById(input.id, transaction, false)
-        : await transaction.getRepository(Job).save(Job.create({ companyId: company.id }));
 
       if (addressIds) {
         if (input.id) {
@@ -45,6 +53,13 @@ export class JobClientService extends JobService {
         for (const addressId of addressIds) {
           await transaction.getRepository(JobAddress).save({ addressId, jobId: job.id });
         }
+        await transaction
+          .getRepository(CompanyAddress)
+          .createQueryBuilder('CompanyAddress')
+          .update()
+          .set({ isUsed: true })
+          .where(`id in (:...ids)`, { ids: addressIds })
+          .execute();
       }
       if (levelIds) {
         if (input.id) {
@@ -87,13 +102,13 @@ export class JobClientService extends JobService {
     }
 
     // implement get application for job.  if have application, cant deletes
-    const userJob = await UserJob.findOne({ jobId, isApplied: true });
+    const userJob = await UserJob.findOne({ jobId });
 
     if (userJob) {
       throw new BadRequestException(messageKey.BASE.NOT_DELETE_JOB);
     }
 
-    await Job.createQueryBuilder().delete().where('id = :jobId', { jobId });
+    await Job.createQueryBuilder().delete().where('id = :jobId', { jobId }).execute();
     return { message: messageKey.BASE.SUCCESSFULLY, success: true };
   }
 

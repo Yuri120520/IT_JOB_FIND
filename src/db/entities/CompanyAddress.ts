@@ -24,6 +24,10 @@ export class CompanyAddress extends CustomBaseEntity {
   @Column()
   detail: string;
 
+  @Field(() => Boolean, { defaultValue: false })
+  @Column()
+  isUsed: boolean;
+
   @Field(() => Company)
   @ManyToOne(() => Company)
   @JoinColumn({ name: 'company_id' })

@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsEnum, IsOptional, IsUrl, IsUUID } from 'class-validator';
 
 import { Gender } from '@/common/constant';
 
@@ -19,7 +19,8 @@ export class UserUpdateInput {
   gender: Gender;
 
   @Field(() => String, { nullable: true })
-  @IsString()
+  @IsOptional()
+  @IsUrl()
   avatar: string;
 }
 

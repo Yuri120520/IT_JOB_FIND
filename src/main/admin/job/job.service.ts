@@ -12,7 +12,7 @@ export class JobAdminService extends JobService {
     const { id, status } = input;
     const job = await JobService.getOneById(id);
 
-    if (job.status === status || (job.status === JobStatus.CLOSE && status === JobStatus.OPEN)) {
+    if (job.status === status || (job.status === JobStatus.CLOSED && status === JobStatus.OPEN)) {
       throw new BadGatewayException(messageKey.BASE.UPDATE_JOB_STATUS_NOT_CORRECT);
     }
     job.status = status;

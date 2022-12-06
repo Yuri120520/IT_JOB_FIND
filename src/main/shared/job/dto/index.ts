@@ -1,8 +1,17 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { ArrayMinSize, IsEnum, IsOptional, IsPositive, Validate, ValidateNested } from 'class-validator';
+import {
+  ArrayMinSize,
+  ArrayNotEmpty,
+  ArrayUnique,
+  IsEnum,
+  IsOptional,
+  IsPositive,
+  Validate,
+  ValidateNested
+} from 'class-validator';
 
-import { JobType } from '@/db/entities/Job';
+import { JobStatus, JobType } from '@/db/entities/Job';
 import { EntityExistingValidator } from '@/decorators/entityExistingValidator.decorator';
 
 @InputType()
@@ -50,4 +59,16 @@ export class JobFilterDto {
   @ValidateNested({ each: true })
   @Type(() => SalaryRange)
   salaryRanges: SalaryRange[];
+
+  @Field(() => ID, { nullable: true })
+  @IsOptional()
+  @Validate(EntityExistingValidator, ['company'])
+  companyId: string;
+
+  @Field(() => [JobStatus], { nullable: true })
+  @IsOptional()
+  @ArrayNotEmpty()
+  @ArrayUnique()
+  @IsEnum(JobStatus, { each: true })
+  statuses: JobStatus[];
 }

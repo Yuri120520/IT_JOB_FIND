@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { UpsertCVDto } from './dto';
 
+import { ResponseMessageBase } from '@/common/interfaces/returnBase';
 import { CV } from '@/db/entities/CV';
 import { messageKey } from '@/i18n';
 import { CVService } from '@/main/shared/cv/cv.service';
@@ -9,22 +10,37 @@ import { CVService } from '@/main/shared/cv/cv.service';
 @Injectable()
 export class CVClientService extends CVService {
   async upsertCV(userId: string, input: UpsertCVDto) {
-    const { id, ...data } = input;
-    const existingCV = await CV.findOne({ id });
+    const { id, name } = input;
 
-    const mergingCV = CV.merge(existingCV ?? CV.create(), { ...data, userId });
+    if (name) {
+      const builder = await CV.createQueryBuilder('cv').where(`LOWER(name) = :name AND cv.userId = :userId`, {
+        name: name.toLowerCase(),
+        userId
+      });
 
-    return await CV.save(mergingCV);
+      if (id) builder.andWhere(`id != :id`, { id });
+      const existedCV = await builder.getOne();
+
+      if (existedCV) {
+        throw new BadRequestException(messageKey.BASE.CV_IS_ALREADY_EXISTED);
+      }
+    }
+    const cv = id ? await CVService.getOneById(id) : await CV.create();
+    await CV.merge(cv, { ...input, userId }).save();
+    return { message: messageKey.BASE.SUCCESSFULLY, success: true };
   }
 
-  async deleteCV(userId: string, cvId: string) {
-    const cv = await CV.findOne({ id: cvId, userId });
-
-    if (!cv) {
-      throw new NotFoundException(messageKey.BASE.DATA_NOT_FOUND);
+  async deleteOne(userId: string, id: string): Promise<ResponseMessageBase> {
+    const cv = await CVService.getOneById(id, true);
+    if (cv.userId !== userId) {
+      throw new BadRequestException(messageKey.BASE.NOT_PERMISSION);
+    }
+    if (cv.isUsed) {
+      throw new BadRequestException(messageKey.BASE.CV_CAN_NOT_DELETE);
     }
 
-    await CV.createQueryBuilder().delete().where({ id: cvId }).execute();
+    await CV.delete(id);
+
     return { message: messageKey.BASE.SUCCESSFULLY, success: true };
   }
 }

@@ -5,6 +5,7 @@ import { getManager } from 'typeorm';
 import { ApplyJobDto, UpsertUserJobDto } from './dto';
 
 import { Application } from '@/db/entities/Application';
+import { CV } from '@/db/entities/CV';
 import { UserJob } from '@/db/entities/UserJob';
 import { messageKey } from '@/i18n';
 
@@ -46,6 +47,14 @@ export class UserJobService extends BaseService<UserJob> {
         .update()
         .set({ isApplied: true })
         .where({ id: userJob.id })
+        .execute();
+
+      await transaction
+        .getRepository(CV)
+        .createQueryBuilder()
+        .update()
+        .set({ isUsed: true })
+        .where({ id: input.CVId })
         .execute();
 
       return { message: messageKey.BASE.SUCCESSFULLY, success: true };

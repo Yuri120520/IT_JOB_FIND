@@ -7,7 +7,7 @@ import { Job } from '@/db/entities/Job';
 
 export class AttachJobFilterCommand {
   static async addFilterQuery(builder: SelectQueryBuilder<Job>, filters: JobFilterDto) {
-    const { addresses, levelIds, salaryRanges, skillIds, title, types } = filters;
+    const { addresses, levelIds, salaryRanges, skillIds, title, types, companyId, statuses } = filters;
 
     if (title) {
       builder.andWhere(`unaccent(Job.description ->> 'title') ILIKE unaccent(:title)`, { title: `%${title}%` });
@@ -45,10 +45,18 @@ export class AttachJobFilterCommand {
         })
       );
     }
+
+    if (companyId) {
+      builder.andWhere('Company.id = :id', { id: companyId });
+    }
+
+    if (statuses) {
+      builder.andWhere('Job.status in (:...statuses)', { statuses });
+    }
     return builder;
   }
 
-  static async addOrderByQuery(builder: SelectQueryBuilder<Job>, orderBy: string) {
+  static async addOrderByQuery(builder: SelectQueryBuilder<any>, orderBy: string) {
     const field = orderBy.split(':')[0];
     const sortBy = orderBy.split(':')[1].toUpperCase() as 'DESC' | 'ASC';
     const nulls = String(orderBy.split(':')[2]).replace('_', ' ').toUpperCase() as 'NULLS FIRST' | 'NULLS LAST';

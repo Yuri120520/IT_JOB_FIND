@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { Gender, ROLE } from '@/common/constant';
+import { Role } from '@/db/entities/Role';
 
 export interface SendCodeVerifyInput {
   email: string;
@@ -37,14 +38,14 @@ export class LoginResponse {
   @Field()
   refreshToken: string;
 
-  //   @Field(() => ID, { nullable: true })
-  //   roleId: number;
+  @Field(() => ID, { nullable: true })
+  roleId: number;
 
-  //   @Field({ nullable: true })
-  //   avatar: string;
+  @Field(() => Role, { nullable: true })
+  role: Role;
 
-  //   @Field({ nullable: true })
-  //   facebookId: string;
+  @Field({ nullable: true })
+  avatar: string;
 
   //   @Field({ nullable: true })
   //   googleId: string;

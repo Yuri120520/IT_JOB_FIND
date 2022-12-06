@@ -13,7 +13,11 @@ export class IUser extends PickType(User, [
   'isActive',
   'phoneNumber',
   'role',
-  'roleId'
+  'roleId',
+  'company',
+  'userJobs',
+  'createdAt',
+  'updatedAt'
 ]) {}
 
 @ObjectType({ isAbstract: true })

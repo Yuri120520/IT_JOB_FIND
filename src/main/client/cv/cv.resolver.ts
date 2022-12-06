@@ -5,7 +5,6 @@ import { UpsertCVDto } from './dto';
 
 import { ROLE } from '@/common/constant';
 import { ResponseMessageBase } from '@/common/interfaces/returnBase';
-import { CV } from '@/db/entities/CV';
 import { Auth } from '@/decorators/auth.decorator';
 import { Roles } from '@/decorators/roles.decorator';
 import { Context, GetContext } from '@/decorators/user.decorator';
@@ -16,7 +15,7 @@ import { Context, GetContext } from '@/decorators/user.decorator';
 export class CVClientResolver {
   constructor(private service: CVClientService) {}
 
-  @Mutation(() => CV, { name: 'upsertCV' })
+  @Mutation(() => ResponseMessageBase, { name: 'upsertCV' })
   async upsertCV(@Args('input') input: UpsertCVDto, @GetContext() ctx: Context) {
     const { currentUser } = ctx;
     return await this.service.upsertCV(currentUser.id, input);
@@ -25,6 +24,6 @@ export class CVClientResolver {
   @Mutation(() => ResponseMessageBase, { name: 'deleteCV' })
   async deleteCV(@Args('id') id: string, @GetContext() ctx: Context) {
     const { currentUser } = ctx;
-    return await this.service.deleteCV(currentUser.id, id);
+    return await this.service.deleteOne(currentUser.id, id);
   }
 }
