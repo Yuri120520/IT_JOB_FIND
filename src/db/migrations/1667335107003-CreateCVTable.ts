@@ -25,7 +25,7 @@ export class CreateCVTable1667335107003 implements MigrationInterface {
             isNullable: false
           },
           {
-            name: 'isUsed',
+            name: 'is_used',
             type: 'boolean',
             default: false
           },

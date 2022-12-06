@@ -28,6 +28,7 @@ export class CV extends CustomBaseEntity {
   url: string;
 
   @Field(() => Boolean, { defaultValue: false })
+  @Column()
   isUsed: boolean;
 
   @Field(() => IUser)

@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
 
 import { ReplyApplicationDto, UpsertJobDto } from './dto';
 import { JobClientService } from './job.service';
@@ -23,7 +23,7 @@ export class JobClientResolver {
   }
 
   @Mutation(() => ResponseMessageBase, { name: 'deleteJob' })
-  async deleteJob(@GetContext() ctx: Context, @Args('id') id: string) {
+  async deleteJob(@GetContext() ctx: Context, @Args('id', { type: () => ID }) id: string) {
     const { currentUser } = ctx;
     return await this.service.deleteOne(currentUser.id, id);
   }

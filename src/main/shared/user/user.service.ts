@@ -1,5 +1,6 @@
 import { BaseService } from '@enouvo-packages/base-nestjs-api';
 import { Injectable } from '@nestjs/common';
+import { getManager } from 'typeorm';
 
 import { ChangePasswordInput, UserUpdateInput } from './dto';
 import { IUser } from './interface';
@@ -26,12 +27,13 @@ export class UserService extends BaseService<User> {
 
     await updated.save();
 
-    return updated;
+    return await GetUserQuery.getUserById(id, true, getManager(), ['role']);
   }
 
   public async changePassword(changePasswordInput: ChangePasswordInput, ctx: Context): Promise<ResponseMessageBase> {
     const { password, newPassword } = changePasswordInput;
     const user = await GetUserQuery.getUserById(ctx.currentUser.id);
+    console.log('first', user);
 
     await PasswordUtil.validateHash(password, user.password);
 

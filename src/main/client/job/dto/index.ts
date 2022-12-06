@@ -88,7 +88,7 @@ export class UpsertJobDto {
   @Field(() => JobStatus, { nullable: true })
   @IsOptional()
   @IsEnum(JobStatus)
-  @IsIn([JobStatus.OPEN, JobStatus.CLOSE], { message: 'Not allowed to choose blocked status for role.' })
+  @IsIn([JobStatus.OPEN, JobStatus.CLOSED], { message: 'Not allowed to choose blocked status for role.' })
   status: JobStatus;
 
   @Field(() => [String], { nullable: true })

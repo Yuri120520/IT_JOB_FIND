@@ -5,6 +5,7 @@ import {
   ArrayUnique,
   IsArray,
   IsInt,
+  IsNotEmpty,
   IsOptional,
   IsString,
   IsUrl,
@@ -23,6 +24,7 @@ export class UpdateCompanyAddressDto {
   id: string;
 
   @Field()
+  @IsNotEmpty()
   detail: string;
 }
 

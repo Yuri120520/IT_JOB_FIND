@@ -21,7 +21,7 @@ export enum JobType {
 
 export enum JobStatus {
   OPEN = 'Open',
-  CLOSE = 'Closed',
+  CLOSED = 'Closed',
   BLOCKED = 'Blocked'
 }
 
@@ -125,7 +125,9 @@ export class Job extends CustomBaseEntity {
       ['levels'],
       ['levels', 'level'],
       ['userJobs'],
-      ['userJobs', 'application']
+      ['userJobs', 'application'],
+      ['userJobs', 'application', 'CV'],
+      ['userJobs', 'user']
     ];
     return getJoinRelation(info, fields, withPagination, forceInclude);
   }
