@@ -16,6 +16,6 @@ COPY . .
 
 RUN yarn build
 RUN rm -f .npmrc 
-RUN yarn dev
+
 
 CMD ["pm2-runtime", "start", "yarn", "--name", "IT_JOB_FIND_API", "--interpreter", "sh", "--", "start"]
