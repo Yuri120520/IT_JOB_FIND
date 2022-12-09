@@ -76,7 +76,7 @@ export class StripeService {
         cancelUrl,
         successUrl
       } = input;
-      const user = await GetUserQuery.getUserById(userId, true, transaction, ['role', 'company']);
+      const user = await GetUserQuery.getUserById(userId, true, transaction, ['role', 'company', 'company.user']);
       const jobs = await transaction.getRepository(Job).find({ companyId: user.company.id });
       if (postInterval === PostInterval.MONTH && jobs.length < 3) {
         input.data.status = JobStatus.OPEN;
