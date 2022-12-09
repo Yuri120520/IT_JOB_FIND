@@ -10,6 +10,7 @@ import { CreateStripeCheckoutResponse, RequestWithRawBody } from './interface';
 
 import { Job, JobStatus, PostInterval } from '@/db/entities/Job';
 import { JobClientService } from '@/main/client/job/job.service';
+import { emailService } from '@/services/smtp/services';
 import { StripeAdapter } from '@/services/stripe';
 
 @Injectable()
@@ -81,6 +82,9 @@ export class StripeService {
       if (postInterval === PostInterval.MONTH && jobs.length < 3) {
         input.data.status = JobStatus.OPEN;
         job = await JobClientService.upsertJob(userId, input.data, transaction);
+
+        await emailService.sendEmailPostJobSuccessFully(user.company, job);
+
         return { paymentUrl: `${successUrl}/${job.id}` };
       }
       input.data.status = JobStatus.DRAFT;

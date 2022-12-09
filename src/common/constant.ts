@@ -60,3 +60,5 @@ export const POST_INTERVAL_COST = {
   two_months: 18,
   three_months: 25
 };
+
+export const CONTENT_TYPE_OPEN_XML_FORMATS = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';

@@ -4,10 +4,15 @@ import { getManager } from 'typeorm';
 import { Application } from '@/db/entities/Application';
 import { Job, JobStatus } from '@/db/entities/Job';
 import { UserJob } from '@/db/entities/UserJob';
+import { emailService } from '@/services/smtp/services';
 
 export class HandleCloseJobCommand {
   static async execute(job: Job, transaction = getManager()) {
-    const userJobs = await UserJob.find({ where: { jobId: job.id, isApplied: true }, relations: ['application'] });
+    const userJobs = await UserJob.find({
+      where: { jobId: job.id, isApplied: true },
+      relations: ['application', 'job', 'user', 'job.company']
+    });
+
     const notRepliedApplications = userJobs.length ? userJobs.filter(item => !item.application.replyData) : undefined;
     if (notRepliedApplications && notRepliedApplications.length) {
       const REJECTED_MESSAGE_DEFAULT = `
@@ -30,7 +35,11 @@ export class HandleCloseJobCommand {
         .where('userJobId IN (...:userJobIds)', { userJobIds: notRepliedApplications.map(item => item.id) })
         .execute();
 
-      //sendEmail
+      Promise.all([
+        ...notRepliedApplications.map(
+          async item => await emailService.sendEmailRejectedApplication(item.user, item.job)
+        )
+      ]);
     }
 
     job.status = JobStatus.CLOSED;
