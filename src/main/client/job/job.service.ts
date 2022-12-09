@@ -1,3 +1,5 @@
+import { GenerateJobResultCommand, JobResultDataGenerator } from './command/generateJobResult.command';
+
 /* eslint-disable no-nested-ternary */
 /* eslint-disable import/order */
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
@@ -22,6 +24,9 @@ import { GetUserQuery } from '@/main/shared/user/query/getUser.query';
 import dayjs from 'dayjs';
 import { JobService } from '@/main/shared/job/job.service';
 import { HandleCloseJobCommand } from './command/handleCloseJob.command';
+import { emailService } from '@/services/smtp/services';
+import { S3_UPLOAD_TYPE } from '@/common/constant';
+import { GenerateJobResultResponse } from './interface';
 
 @Injectable()
 export class JobClientService extends JobService {
@@ -127,7 +132,7 @@ export class JobClientService extends JobService {
     const { id, isAccept, interview, message } = input;
     const application = await Application.findOne(
       { id },
-      { relations: ['userJob', 'userJob.job', 'userJob.job.company', 'userJob.job.company.user'] }
+      { relations: ['userJob', 'userJob.user', 'userJob.job', 'userJob.job.company', 'userJob.job.company.user'] }
     );
 
     if (application.userJob.job.company.user.id !== userId) {
@@ -143,7 +148,11 @@ export class JobClientService extends JobService {
 
     await Application.save(application);
 
-    //send email to employee and employer
+    if (isAccept) {
+      await emailService.sendEmailAcceptedApplication(application.userJob.user, application.userJob.job);
+    } else {
+      await emailService.sendEmailRejectedApplication(application.userJob.user, application.userJob.job);
+    }
 
     return { message: messageKey.BASE.SUCCESSFULLY, success: true };
   }
@@ -162,5 +171,39 @@ export class JobClientService extends JobService {
       await HandleCloseJobCommand.execute(job, transaction);
       return { message: messageKey.BASE.SUCCESSFULLY, success: true };
     });
+  }
+
+  async generateJobResult(userId: string, jobId: string): Promise<GenerateJobResultResponse> {
+    const job = await Job.findOne(
+      { id: jobId, status: JobStatus.CLOSED },
+      { relations: ['company', 'userJobs', 'userJobs.application', 'userJobs.user', 'userJobs.application.CV'] }
+    );
+
+    if (job.company.userId !== userId) {
+      throw new ForbiddenException(messageKey.BASE.NOT_PERMISSION);
+    }
+
+    if (job.userJobs && job.userJobs.length) {
+      const data: JobResultDataGenerator[] = job.userJobs.map(
+        item =>
+          ({
+            email: item.user.email,
+            accepted: item.application.isAccepted,
+            cv: item.application.CV.url,
+            fullName: item.user.fullName,
+            phoneNumber: item.user.phoneNumber
+          } as JobResultDataGenerator)
+      );
+      const sheetName = `Result of ${job.description.title}`;
+      const excelData = await GenerateJobResultCommand.excelGenerator(data, sheetName);
+      const resultUrl = await GenerateJobResultCommand.exportResult(
+        excelData,
+        `${S3_UPLOAD_TYPE.Public}/job-result/${job.companyId}`
+      );
+
+      await Job.createQueryBuilder().update().set({ resultUrl }).where({ id: job.id }).execute();
+      return { resultUrl };
+    }
+    return { resultUrl: null };
   }
 }

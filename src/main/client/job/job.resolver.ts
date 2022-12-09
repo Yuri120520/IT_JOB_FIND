@@ -1,6 +1,7 @@
-import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { ReplyApplicationDto, UpsertJobDto } from './dto';
+import { GenerateJobResultResponse } from './interface';
 import { JobClientService } from './job.service';
 
 import { ROLE } from '@/common/constant';
@@ -32,5 +33,17 @@ export class JobClientResolver {
   async replyApplication(@Args('input') input: ReplyApplicationDto, @GetContext() ctx: Context) {
     const { currentUser } = ctx;
     return await this.service.replyApplication(currentUser.id, input);
+  }
+
+  @Mutation(() => ResponseMessageBase, { name: 'markJobAsCompleted' })
+  async markJobAsCompleted(@Args('jobId', { type: () => ID }) id: string, @GetContext() ctx: Context) {
+    const { currentUser } = ctx;
+    return await this.service.markJobAsCompleted(id, currentUser.id);
+  }
+
+  @Query(() => GenerateJobResultResponse, { name: 'generateJobResult' })
+  async generateJobResult(@Args('jobId', { type: () => ID }) id: string, @GetContext() ctx: Context) {
+    const { currentUser } = ctx;
+    return await this.service.generateJobResult(currentUser.id, id);
   }
 }
