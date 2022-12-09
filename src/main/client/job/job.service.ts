@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+/* eslint-disable no-nested-ternary */
+/* eslint-disable import/order */
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+
+/* eslint-disable no-param-reassign */
 import { getManager } from 'typeorm';
 
 import { ReplyApplicationDto, UpsertJobDto } from './dto';
@@ -6,91 +10,98 @@ import { ReplyApplicationDto, UpsertJobDto } from './dto';
 import { ResponseMessageBase } from '@/common/interfaces/returnBase';
 import { Application } from '@/db/entities/Application';
 import { CompanyAddress } from '@/db/entities/CompanyAddress';
-import { Job } from '@/db/entities/Job';
+import { Job, JobStatus, PostInterval } from '@/db/entities/Job';
 import { JobAddress } from '@/db/entities/JobAddress';
 import { JobLevel } from '@/db/entities/JobLevel';
 import { JobSkill } from '@/db/entities/JobSkill';
 import { UserJob } from '@/db/entities/UserJob';
 import { messageKey } from '@/i18n';
 import { CompanyService } from '@/main/shared/company/company.service';
-import { JobService } from '@/main/shared/job/job.service';
+
 import { GetUserQuery } from '@/main/shared/user/query/getUser.query';
+import dayjs from 'dayjs';
+import { JobService } from '@/main/shared/job/job.service';
+import { HandleCloseJobCommand } from './command/handleCloseJob.command';
 
 @Injectable()
 export class JobClientService extends JobService {
-  async upsertJob(userId: string, input: UpsertJobDto) {
-    return await getManager().transaction(async transaction => {
-      const { addressIds, levelIds, skillIds, ...data } = input;
-      const company = await CompanyService.getOneByUserId(userId, true, transaction);
+  static async upsertJob(userId: string, input: UpsertJobDto, transaction = getManager()) {
+    const { addressIds, levelIds, skillIds, postInterval, ...data } = input;
+    let closeDate;
+    const company = await CompanyService.getOneByUserId(userId, true, transaction);
 
-      const job = input.id
-        ? await JobService.getOneById(input.id, transaction, false, ['company', 'company.user'])
-        : await transaction.getRepository(Job).save(Job.create({ companyId: company.id }));
+    const job = input.id
+      ? await JobService.getOneById(input.id, transaction, false, ['company', 'company.user'])
+      : await transaction.getRepository(Job).save(Job.create({ companyId: company.id }));
 
-      if (job) {
-        const userJob = await UserJob.findOne({ jobId: input.id, isApplied: true });
+    if (job) {
+      const userJob = await UserJob.findOne({ jobId: input.id, isApplied: true });
 
-        if (
-          userJob &&
-          input.salary &&
-          (input.salary.isNegotiable !== job.salary.isNegotiable ||
-            input.salary.max !== job.salary.max ||
-            job.salary.min !== input.salary.min)
-        ) {
-          throw new BadRequestException(messageKey.BASE.NOT_UPDATE_JOB);
-        }
+      if (
+        userJob &&
+        input.salary &&
+        (input.salary.isNegotiable !== job.salary.isNegotiable ||
+          input.salary.max !== job.salary.max ||
+          job.salary.min !== input.salary.min)
+      ) {
+        throw new BadRequestException(messageKey.BASE.NOT_UPDATE_JOB);
       }
+    }
 
-      if (addressIds) {
-        if (input.id) {
-          transaction
-            .getRepository(JobAddress)
-            .createQueryBuilder()
-            .delete()
-            .where(`jobId = :jobId`, { jobId: job.id })
-            .execute();
-        }
-        for (const addressId of addressIds) {
-          await transaction.getRepository(JobAddress).save({ addressId, jobId: job.id });
-        }
-        await transaction
-          .getRepository(CompanyAddress)
-          .createQueryBuilder('CompanyAddress')
-          .update()
-          .set({ isUsed: true })
-          .where(`id in (:...ids)`, { ids: addressIds })
+    if (addressIds) {
+      if (input.id) {
+        transaction
+          .getRepository(JobAddress)
+          .createQueryBuilder()
+          .delete()
+          .where(`jobId = :jobId`, { jobId: job.id })
           .execute();
       }
-      if (levelIds) {
-        if (input.id) {
-          transaction
-            .getRepository(JobLevel)
-            .createQueryBuilder()
-            .delete()
-            .where(`jobId = :jobId`, { jobId: job.id })
-            .execute();
-        }
-        for (const levelId of levelIds) {
-          await transaction.getRepository(JobLevel).save({ levelId, jobId: job.id });
-        }
+      for (const addressId of addressIds) {
+        await transaction.getRepository(JobAddress).save({ addressId, jobId: job.id });
       }
-      if (skillIds) {
-        if (input.id) {
-          transaction
-            .getRepository(JobSkill)
-            .createQueryBuilder()
-            .delete()
-            .where(`jobId = :jobId`, { jobId: job.id })
-            .execute();
-        }
-        for (const skillId of skillIds) {
-          await transaction.getRepository(JobSkill).save({ skillId, jobId: job.id });
-        }
+      await transaction
+        .getRepository(CompanyAddress)
+        .createQueryBuilder('CompanyAddress')
+        .update()
+        .set({ isUsed: true })
+        .where(`id in (:...ids)`, { ids: addressIds })
+        .execute();
+    }
+    if (levelIds) {
+      if (input.id) {
+        transaction
+          .getRepository(JobLevel)
+          .createQueryBuilder()
+          .delete()
+          .where(`jobId = :jobId`, { jobId: job.id })
+          .execute();
       }
-      const mergingJob = transaction.getRepository(Job).merge(job, { ...data });
+      for (const levelId of levelIds) {
+        await transaction.getRepository(JobLevel).save({ levelId, jobId: job.id });
+      }
+    }
+    if (skillIds) {
+      if (input.id) {
+        transaction
+          .getRepository(JobSkill)
+          .createQueryBuilder()
+          .delete()
+          .where(`jobId = :jobId`, { jobId: job.id })
+          .execute();
+      }
+      for (const skillId of skillIds) {
+        await transaction.getRepository(JobSkill).save({ skillId, jobId: job.id });
+      }
+    }
 
-      return await transaction.getRepository(Job).save(mergingJob);
-    });
+    if (postInterval) {
+      const interval = postInterval === PostInterval.MONTH ? 1 : postInterval === PostInterval.TWO_MONTHS ? 2 : 3;
+      closeDate = dayjs().add(interval, 'months').format('DD/MM/YYYY');
+    }
+    const mergingJob = transaction.getRepository(Job).merge(job, { ...data, closeDate, postInterval });
+
+    return await transaction.getRepository(Job).save(mergingJob);
   }
 
   async deleteOne(userId: string, jobId: string): Promise<ResponseMessageBase> {
@@ -132,6 +143,24 @@ export class JobClientService extends JobService {
 
     await Application.save(application);
 
+    //send email to employee and employer
+
     return { message: messageKey.BASE.SUCCESSFULLY, success: true };
+  }
+
+  async markJobAsCompleted(jobId: string, userId: string) {
+    return await getManager().transaction(async transaction => {
+      const job = await JobService.getOneById(jobId, transaction, true, ['company']);
+
+      if (job.company.userId !== userId) {
+        throw new ForbiddenException(messageKey.BASE.NOT_PERMISSION);
+      }
+
+      if (job.status !== JobStatus.OPEN) {
+        throw new BadRequestException(messageKey.BASE.JOB_CAN_NOT_MARK_AS_COMPLETED);
+      }
+      await HandleCloseJobCommand.execute(job, transaction);
+      return { message: messageKey.BASE.SUCCESSFULLY, success: true };
+    });
   }
 }

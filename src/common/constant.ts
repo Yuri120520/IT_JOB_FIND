@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export const contentTypes = [
   'application/pdf',
   'image/jpeg',
@@ -53,3 +54,9 @@ export enum UserVerificationRequestType {
 
 export const MAX_SALARY = 10000;
 export const MIN_SALARY = 0;
+
+export const POST_INTERVAL_COST = {
+  one_month: 10,
+  two_months: 18,
+  three_months: 25
+};

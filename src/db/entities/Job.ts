@@ -20,9 +20,16 @@ export enum JobType {
 }
 
 export enum JobStatus {
+  DRAFT = 'Draft',
   OPEN = 'Open',
   CLOSED = 'Closed',
   BLOCKED = 'Blocked'
+}
+
+export enum PostInterval {
+  MONTH = 'one_month',
+  TWO_MONTHS = 'two_months',
+  THREE_MONTHS = 'three_months'
 }
 
 @ObjectType({ isAbstract: true })
@@ -114,6 +121,18 @@ export class Job extends CustomBaseEntity {
   @OneToMany(() => UserJob, userJob => userJob.job)
   @JoinColumn({ name: 'id' })
   userJobs: UserJob[];
+
+  @Field(() => PostInterval, { nullable: true })
+  @Column({ type: 'enum', enum: PostInterval, nullable: true })
+  postInterval: PostInterval;
+
+  @Field({ nullable: true })
+  @Column()
+  paymentUrl: string;
+
+  @Field({ nullable: true })
+  @Column()
+  resultUrl: string;
 
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
     const fields = [

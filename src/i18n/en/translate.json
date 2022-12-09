@@ -27,6 +27,8 @@
   "JOB_IS_FOLLOWING": "You are following this job.",
   "CV_CAN_NOT_DELETE": "CV is used. This can not delete.",
   "CV_IS_ALREADY_EXISTED": "CV is already existed.",
+  "JOB_DONE_OR_CAN_NOT_APPLIED": "Recruitment post is closed or can not applied.",
+  "JOB_CAN_NOT_MARK_AS_COMPLETED":"Job can not mark as completed",
 
   "SHARE_EVENT": {
     "COMMON_ERR_NOT_FOUND": "{0.obj} not found"

@@ -21,6 +21,10 @@ export const configuration = {
     s3BucketName: process.env.S3_BUCKET,
     mainQueueUrl: process.env.MAIN_QUEUE_URL
   },
+  stripe: {
+    stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
+    endpointSecret: process.env.STRIPE_ENDPOINT_SECRET || ''
+  },
   jwt: {
     secretKey: process.env.JWT_SECRET || 'it-job-find-2022',
     refreshSecretKey: process.env.JWT_REFRESH_SECRET || 'it-job-find-2022',

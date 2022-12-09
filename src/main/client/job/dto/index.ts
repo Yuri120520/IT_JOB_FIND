@@ -18,7 +18,7 @@ import {
 
 import { MAX_SALARY } from '@/common/constant';
 import { InterviewMethod } from '@/db/entities/Application';
-import { JobStatus, JobType } from '@/db/entities/Job';
+import { JobStatus, JobType, PostInterval } from '@/db/entities/Job';
 import { EntityExistingValidator } from '@/decorators/entityExistingValidator.decorator';
 
 @InputType()
@@ -80,11 +80,6 @@ export class UpsertJobDto {
   @ArrayUnique()
   yearOfExperiences: number[];
 
-  @Field(() => Date, { nullable: true })
-  @IsOptional()
-  @IsDate()
-  closeDate: Date;
-
   @Field(() => JobStatus, { nullable: true })
   @IsOptional()
   @IsEnum(JobStatus)
@@ -117,6 +112,11 @@ export class UpsertJobDto {
   @ArrayUnique()
   @IsEnum(JobType, { each: true })
   types: JobType[];
+
+  @Field(() => PostInterval, { nullable: true })
+  @IsOptional()
+  @IsEnum(PostInterval)
+  postInterval: PostInterval;
 }
 
 @InputType()
