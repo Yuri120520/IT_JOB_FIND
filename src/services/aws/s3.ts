@@ -51,4 +51,29 @@ export class S3Adapter {
       throw new HttpException(err, 404);
     }
   }
+
+  upload(buffer: any, key: string, type: string): Promise<string> {
+    const s3Params = {
+      Key: key,
+      Body: buffer,
+      Bucket: this.bucket,
+      ContentEncoding: 'base64',
+      ACL: 'public-read',
+      ContentType: type
+    };
+    try {
+      return new Promise((resolve, reject) => {
+        this.s3.upload(s3Params, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+    } catch (err) {
+      console.log('s3 upload failed');
+      throw new Error(err);
+    }
+  }
 }
