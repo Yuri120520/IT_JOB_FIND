@@ -11,7 +11,15 @@ export class AddColumnPostIntervalColumnAndTypePostIntervalToJobTable16705684252
             'three_months'
         );
 
-        ALTER TYPE job_status_enum ADD VALUE 'Draft';
+        DROP TYPE  IF EXISTS job_status_enum ;
+
+        CREATE TYPE job_status_enum AS ENUM (
+            'Draft',
+            'Open',
+            'Closed',
+            'Blocked'
+
+        );     
 
 
         ALTER TABLE "job" 
