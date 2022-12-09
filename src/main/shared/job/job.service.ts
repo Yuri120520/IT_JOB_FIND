@@ -11,6 +11,7 @@ import { JobFilterDto } from './dto';
 
 import { Job, JobStatus } from '@/db/entities/Job';
 import { messageKey } from '@/i18n';
+import { HandleCloseJobCommand } from '@/main/client/job/command/handleCloseJob.command';
 
 @Injectable()
 export class JobService extends BaseService<Job> {
@@ -21,7 +22,7 @@ export class JobService extends BaseService<Job> {
     const job: Job = await JobService.getOneById(id);
 
     if (dayjs(job.closeDate) < dayjs() && job.status === JobStatus.OPEN) {
-      await Job.createQueryBuilder().update().set({ status: JobStatus.CLOSED }).where({ id: job.id }).execute();
+      await HandleCloseJobCommand.execute(job);
     }
 
     return await this.findOne({ id }, info);

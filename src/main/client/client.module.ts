@@ -9,6 +9,7 @@ import { UserAdminModule } from '../admin/user/user.module';
 import { CompanyAddressModule } from '../shared/address/companyAddress.module';
 import { LevelModule } from '../shared/level/level.module';
 import { SkillModule } from '../shared/skill/skill.module';
+import { StripeModule } from '../shared/stripe/stripe.module';
 import { UploadModule } from '../shared/upload/upload.module';
 import { UserModule } from '../shared/user/user.module';
 import { AuthClientModule } from './auth/auth.module';
@@ -44,7 +45,8 @@ import { UserJobModule } from './userJob/userJob.module';
         UploadModule,
         CompanyAddressModule,
         UserAdminModule,
-        JobAdminModule
+        JobAdminModule,
+        StripeModule
       ]
     }),
     UserModule,
@@ -59,7 +61,8 @@ import { UserJobModule } from './userJob/userJob.module';
     UploadModule,
     CompanyAddressModule,
     UserAdminModule,
-    JobAdminModule
+    JobAdminModule,
+    StripeModule
   ]
 })
 export class ClientModule {}

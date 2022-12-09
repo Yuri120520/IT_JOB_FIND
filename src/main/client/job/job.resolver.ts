@@ -19,7 +19,7 @@ export class JobClientResolver {
   @Mutation(() => Job, { name: 'upsertJob' })
   async upsertJob(@GetContext() ctx: Context, @Args('input') input: UpsertJobDto) {
     const { currentUser } = ctx;
-    return await this.service.upsertJob(currentUser.id, input);
+    return await JobClientService.upsertJob(currentUser.id, input);
   }
 
   @Mutation(() => ResponseMessageBase, { name: 'deleteJob' })

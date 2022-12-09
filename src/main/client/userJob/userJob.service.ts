@@ -1,13 +1,16 @@
 import { BaseService } from '@enouvo-packages/base-nestjs-api';
 import { BadGatewayException, Injectable, NotFoundException } from '@nestjs/common';
+import dayjs from 'dayjs';
 import { getManager } from 'typeorm';
 
 import { ApplyJobDto, UpsertUserJobDto } from './dto';
 
 import { Application } from '@/db/entities/Application';
 import { CV } from '@/db/entities/CV';
+import { JobStatus } from '@/db/entities/Job';
 import { UserJob } from '@/db/entities/UserJob';
 import { messageKey } from '@/i18n';
+import { JobService } from '@/main/shared/job/job.service';
 
 @Injectable()
 export class UserJobService extends BaseService<UserJob> {
@@ -29,6 +32,11 @@ export class UserJobService extends BaseService<UserJob> {
     return await getManager().transaction(async transaction => {
       const { jobId, ...data } = input;
 
+      const job = await JobService.getOneById(jobId, transaction, true);
+
+      if (job.status !== JobStatus.OPEN || dayjs().isAfter(dayjs(job.closeDate))) {
+        throw new BadGatewayException(messageKey.BASE.JOB_DONE_OR_CAN_NOT_APPLIED);
+      }
       let userJob = await transaction.getRepository(UserJob).findOne({ jobId, userId });
 
       if (userJob && userJob.isApplied === true) {
@@ -57,6 +65,7 @@ export class UserJobService extends BaseService<UserJob> {
         .where({ id: input.CVId })
         .execute();
 
+      // send email to employee and employer
       return { message: messageKey.BASE.SUCCESSFULLY, success: true };
     });
   }

@@ -1,6 +1,7 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as bodyParser from 'body-parser';
+import express from 'express';
 
 import { LoggingInterceptor } from '../common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '../common/interceptors/timeout.interceptor';
@@ -17,6 +18,7 @@ async function bootstrap() {
 
     // NOTE: adapter for e2e testing
     app.getHttpAdapter();
+    app.use('/stripe-webhooks', express.raw({ type: '*/*' }));
 
     // NOTE: body parser
     app.use(bodyParser.json({ limit: '50mb' }));
@@ -52,7 +54,8 @@ async function bootstrap() {
         Logger.log(`🚀  Server ready at http://${domain}:${port}`, 'Bootstrap', false),
         Logger.log(`##########################################################`, 'Bootstrap', false),
         Logger.warn(`🚀  Client Server http://${domain}:${port}/client`, 'Bootstrap', false),
-        Logger.log(`##########################################################`, 'Bootstrap', false))
+        Logger.log(`##########################################################`, 'Bootstrap', false),
+        Logger.warn(`🚀  Stripe Account Webhook http://${domain}:${port}/stripe-webhooks/checkout`, 'Bootstrap', false))
       : Logger.log(`🚀  Server is listening on port ${port}`, 'Bootstrap', false);
   } catch (error) {
     Logger.error(`❌  Error starting server, ${error}`, '', 'Bootstrap', false);
