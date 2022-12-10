@@ -79,7 +79,10 @@ export class StripeService {
       } = input;
       const user = await GetUserQuery.getUserById(userId, true, transaction, ['role', 'company', 'company.user']);
       const jobs = await transaction.getRepository(Job).find({ companyId: user.company.id });
-      if (postInterval === PostInterval.MONTH && jobs.length < 3) {
+      if (
+        postInterval === PostInterval.MONTH &&
+        jobs.filter(job => job.postInterval === PostInterval.MONTH).length <= 3
+      ) {
         input.data.status = JobStatus.OPEN;
         job = await JobClientService.upsertJob(userId, input.data, transaction);
 
