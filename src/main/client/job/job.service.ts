@@ -22,6 +22,7 @@ import { CompanyService } from '@/main/shared/company/company.service';
 
 import { GetUserQuery } from '@/main/shared/user/query/getUser.query';
 import dayjs from 'dayjs';
+
 import { JobService } from '@/main/shared/job/job.service';
 import { HandleCloseJobCommand } from './command/handleCloseJob.command';
 import { emailService } from '@/services/smtp/services';
@@ -102,7 +103,7 @@ export class JobClientService extends JobService {
 
     if (postInterval) {
       const interval = postInterval === PostInterval.MONTH ? 1 : postInterval === PostInterval.TWO_MONTHS ? 2 : 3;
-      closeDate = dayjs().add(interval, 'months').format('DD/MM/YYYY');
+      closeDate = dayjs(dayjs().add(interval, 'months').format());
     }
     const mergingJob = transaction.getRepository(Job).merge(job, { ...data, closeDate, postInterval });
 
@@ -124,7 +125,11 @@ export class JobClientService extends JobService {
       throw new BadRequestException(messageKey.BASE.NOT_DELETE_JOB);
     }
 
-    await Job.createQueryBuilder().delete().where('id = :jobId', { jobId }).execute();
+    await Job.createQueryBuilder()
+      .update()
+      .set({ status: JobStatus.DELETED })
+      .where('id = :jobId', { jobId })
+      .execute();
     return { message: messageKey.BASE.SUCCESSFULLY, success: true };
   }
 
@@ -184,17 +189,26 @@ export class JobClientService extends JobService {
     }
 
     if (job.userJobs && job.userJobs.length) {
-      const data: JobResultDataGenerator[] = job.userJobs.map(
-        item =>
-          ({
-            email: item.user.email,
-            accepted: item.application.isAccepted,
-            cv: item.application.CV.url,
-            fullName: item.user.fullName,
-            phoneNumber: item.user.phoneNumber
-          } as JobResultDataGenerator)
-      );
-      const sheetName = `Result of ${job.description.title}`;
+      const data: JobResultDataGenerator[] = job.userJobs
+        .filter(item => item.isApplied === true)
+        .map(
+          item =>
+            ({
+              email: item.user.email,
+              accepted: item.application.isAccepted,
+              cv: item.application.CV.url,
+              fullName: item.user.fullName,
+              phoneNumber: item.user.phoneNumber,
+              message: item.application.replyData.message
+            } as JobResultDataGenerator)
+        );
+      const sheetName = `Result of ${job.description.title
+        .replace(/[^\w(*?:\\/[\])]/g, '_')
+        .replace('/', '_')
+        .trim()} of ${job.company.name
+        .replace(/[^\w(*?:\\/[\])]/g, '_')
+        .replace('/', '_')
+        .trim()}`;
       const excelData = await GenerateJobResultCommand.excelGenerator(data, sheetName);
       const resultUrl = await GenerateJobResultCommand.exportResult(
         excelData,

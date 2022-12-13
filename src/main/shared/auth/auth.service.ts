@@ -125,7 +125,6 @@ export class AuthService {
     }
 
     return await getManager().transaction(async transaction => {
-      console.log('object', data);
       const role = await Role.findOne({ name: data.role });
       if (role.name === ROLE.USER) {
         const { email, password, phoneNumber, fullName, gender } = data;

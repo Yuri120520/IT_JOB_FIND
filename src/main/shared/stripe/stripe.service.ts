@@ -25,7 +25,6 @@ export class StripeService {
     return this.stripeAdapter.constructEvent(signature, payload);
   }
   public async handleStripeWebhook(signature: string, request: RequestWithRawBody) {
-    console.log('first', signature);
     if (!signature) {
       return {
         statusCode: 500,
@@ -81,7 +80,7 @@ export class StripeService {
       const jobs = await transaction.getRepository(Job).find({ companyId: user.company.id });
       if (
         postInterval === PostInterval.MONTH &&
-        jobs.filter(job => job.postInterval === PostInterval.MONTH).length <= 3
+        jobs.filter(job => job.postInterval === PostInterval.MONTH).length < 3
       ) {
         input.data.status = JobStatus.OPEN;
         job = await JobClientService.upsertJob(userId, input.data, transaction);

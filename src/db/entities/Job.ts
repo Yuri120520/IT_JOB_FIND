@@ -23,7 +23,8 @@ export enum JobStatus {
   DRAFT = 'Draft',
   OPEN = 'Open',
   CLOSED = 'Closed',
-  BLOCKED = 'Blocked'
+  BLOCKED = 'Blocked',
+  DELETED = 'Deleted'
 }
 
 export enum PostInterval {
@@ -137,6 +138,7 @@ export class Job extends CustomBaseEntity {
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
     const fields = [
       ['company'],
+      ['company', 'user'],
       ['addresses'],
       ['addresses', 'address'],
       ['skills'],

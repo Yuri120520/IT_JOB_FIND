@@ -34,7 +34,7 @@ export class UserJobService extends BaseService<UserJob> {
     return await getManager().transaction(async transaction => {
       const { jobId, ...data } = input;
 
-      const job = await JobService.getOneById(jobId, transaction, true, ['job.company', 'job.company.user']);
+      const job = await JobService.getOneById(jobId, transaction, true, ['company', 'company.user']);
 
       if (job.status !== JobStatus.OPEN || dayjs().isAfter(dayjs(job.closeDate))) {
         throw new BadGatewayException(messageKey.BASE.JOB_DONE_OR_CAN_NOT_APPLIED);

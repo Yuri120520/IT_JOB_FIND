@@ -5,7 +5,6 @@ const PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])((?=.*?[0-9])|(?=.*?[#?!@$%^&*-
 @ValidatorConstraint({ name: 'passwordValidator', async: false })
 export class PasswordValidator implements ValidatorConstraintInterface {
   validate(password: string) {
-    console.log('password');
     return password && password.match(PASSWORD_REGEX) !== null;
   }
 

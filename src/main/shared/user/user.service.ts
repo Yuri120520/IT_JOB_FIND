@@ -33,7 +33,6 @@ export class UserService extends BaseService<User> {
   public async changePassword(changePasswordInput: ChangePasswordInput, ctx: Context): Promise<ResponseMessageBase> {
     const { password, newPassword } = changePasswordInput;
     const user = await GetUserQuery.getUserById(ctx.currentUser.id);
-    console.log('first', user);
 
     await PasswordUtil.validateHash(password, user.password);
 

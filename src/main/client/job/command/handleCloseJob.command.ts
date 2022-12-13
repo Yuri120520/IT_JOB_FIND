@@ -16,9 +16,9 @@ export class HandleCloseJobCommand {
     const notRepliedApplications = userJobs.length ? userJobs.filter(item => !item.application.replyData) : undefined;
     if (notRepliedApplications && notRepliedApplications.length) {
       const REJECTED_MESSAGE_DEFAULT = `
-      Thank you for your application for the  ${job.description.title} at ${job.company.name}. We really appreciate your interest in joining our company and we want to thank you for the time and energy you invested in your application for the position.
+      Thank you for your application for the  ${job.description.title} at ${job.company.name} . We really appreciate your interest in joining our company and we want to thank you for the time and energy you invested in your application for the position.
 
-      We received a large number of applications, and after carefully reviewing all of them, unfortunately, we have to inform you that this time we won’t be able to invite you to the next round of our hiring process.
+      We received a large number of applications, and after carefully reviewing all of them, unfortunately, we have to inform you that this time we won't be able to invite you to the next round of our hiring process.
 
       Due to the high number of applications we are, unfortunately, not able to provide individual feedback to your application at this early stage of the process. 
 
@@ -32,7 +32,7 @@ export class HandleCloseJobCommand {
         .createQueryBuilder()
         .update()
         .set({ isAccepted: false, replyData: { message: REJECTED_MESSAGE_DEFAULT } })
-        .where('userJobId IN (...:userJobIds)', { userJobIds: notRepliedApplications.map(item => item.id) })
+        .where('userJobId IN (:...userJobIds)', { userJobIds: notRepliedApplications.map(item => item.id) })
         .execute();
 
       Promise.all([

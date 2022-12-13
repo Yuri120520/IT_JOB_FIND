@@ -28,7 +28,6 @@ export class StripeAdapter {
     cancelUrl: string;
     successUrl: string;
   }): Promise<Stripe.Response<Stripe.Checkout.Session>> {
-    console.log(POST_INTERVAL_COST[`${job.postInterval}`]);
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
       {
         price_data: {

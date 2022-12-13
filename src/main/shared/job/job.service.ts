@@ -47,7 +47,7 @@ export class JobService extends BaseService<Job> {
       .leftJoinAndSelect('Job.addresses', 'JobAddress')
       .leftJoinAndSelect('JobAddress.address', 'CompanyAddress')
       .leftJoinAndSelect('Job.userJobs', 'userJob')
-      .where('TRUE');
+      .where('Job.status NOT IN  (:...status)', { status: [JobStatus.DELETED] });
 
     AttachJobFilterCommand.addFilterQuery(builder, filters);
 
