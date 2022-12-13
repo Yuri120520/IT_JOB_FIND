@@ -34,7 +34,7 @@ class EmailFunctions extends EmailService {
 
     <p>Thanks for signing up! 👋</p>
     <p>To complete the registration, simply go back to the browser window where you started creating your account and enter this code:<br> <b>${code}</b></p>
-    <p>If you did not sign up to ThePerfectScore, please ignore this email or contact us at support@example.com</p>
+    <p>If you did not sign up to It Job Find please ignore this email or contact us at support@example.com</p>
     
     <p>Best Regards,</p>
     <b>IT JOB FIND</b>
