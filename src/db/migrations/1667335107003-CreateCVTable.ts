@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-const TABLE_NAME = 'CV';
+const TABLE_NAME = 'cv';
 export class CreateCVTable1667335107003 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
@@ -25,7 +25,7 @@ export class CreateCVTable1667335107003 implements MigrationInterface {
             isNullable: false
           },
           {
-            name: 'isUsed',
+            name: 'is_used',
             type: 'boolean',
             default: false
           },

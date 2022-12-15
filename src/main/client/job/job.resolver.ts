@@ -1,6 +1,7 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { UpsertJobDto } from './dto';
+import { ReplyApplicationDto, UpsertJobDto } from './dto';
+import { GenerateJobResultResponse } from './interface';
 import { JobClientService } from './job.service';
 
 import { ROLE } from '@/common/constant';
@@ -19,12 +20,30 @@ export class JobClientResolver {
   @Mutation(() => Job, { name: 'upsertJob' })
   async upsertJob(@GetContext() ctx: Context, @Args('input') input: UpsertJobDto) {
     const { currentUser } = ctx;
-    return await this.service.upsertJob(currentUser.id, input);
+    return await JobClientService.upsertJob(currentUser.id, input);
   }
 
   @Mutation(() => ResponseMessageBase, { name: 'deleteJob' })
-  async deleteJob(@GetContext() ctx: Context, @Args('id') id: string) {
+  async deleteJob(@GetContext() ctx: Context, @Args('id', { type: () => ID }) id: string) {
     const { currentUser } = ctx;
     return await this.service.deleteOne(currentUser.id, id);
+  }
+
+  @Mutation(() => ResponseMessageBase, { name: 'replyApplication' })
+  async replyApplication(@Args('input') input: ReplyApplicationDto, @GetContext() ctx: Context) {
+    const { currentUser } = ctx;
+    return await this.service.replyApplication(currentUser.id, input);
+  }
+
+  @Mutation(() => ResponseMessageBase, { name: 'markJobAsCompleted' })
+  async markJobAsCompleted(@Args('jobId', { type: () => ID }) id: string, @GetContext() ctx: Context) {
+    const { currentUser } = ctx;
+    return await this.service.markJobAsCompleted(id, currentUser.id);
+  }
+
+  @Query(() => GenerateJobResultResponse, { name: 'generateJobResult' })
+  async generateJobResult(@Args('jobId', { type: () => ID }) id: string, @GetContext() ctx: Context) {
+    const { currentUser } = ctx;
+    return await this.service.generateJobResult(currentUser.id, id);
   }
 }

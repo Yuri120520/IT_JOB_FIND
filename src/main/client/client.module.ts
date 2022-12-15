@@ -4,11 +4,17 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import { join } from 'path';
 
+import { JobAdminModule } from '../admin/job/job.module';
+import { UserAdminModule } from '../admin/user/user.module';
+import { CompanyAddressModule } from '../shared/address/companyAddress.module';
 import { LevelModule } from '../shared/level/level.module';
 import { SkillModule } from '../shared/skill/skill.module';
+import { StripeModule } from '../shared/stripe/stripe.module';
+import { UploadModule } from '../shared/upload/upload.module';
 import { UserModule } from '../shared/user/user.module';
 import { AuthClientModule } from './auth/auth.module';
 import { CompanyClientModule } from './company/company.module';
+import { CVClientModule } from './cv/cv.module';
 import { JobClientModule } from './job/job.module';
 import { UserJobModule } from './userJob/userJob.module';
 
@@ -33,7 +39,14 @@ import { UserJobModule } from './userJob/userJob.module';
         CompanyClientModule,
         UserJobModule,
         SkillModule,
-        LevelModule
+        LevelModule,
+        CVClientModule,
+        UserJobModule,
+        UploadModule,
+        CompanyAddressModule,
+        UserAdminModule,
+        JobAdminModule,
+        StripeModule
       ]
     }),
     UserModule,
@@ -42,7 +55,14 @@ import { UserJobModule } from './userJob/userJob.module';
     CompanyClientModule,
     UserJobModule,
     SkillModule,
-    LevelModule
+    LevelModule,
+    CVClientModule,
+    UserJobModule,
+    UploadModule,
+    CompanyAddressModule,
+    UserAdminModule,
+    JobAdminModule,
+    StripeModule
   ]
 })
 export class ClientModule {}

@@ -7,9 +7,10 @@ import { Company } from './Company';
 import { JobAddress } from './JobAddress';
 import { JobLevel } from './JobLevel';
 import { JobSkill } from './JobSkill';
+import { UserJob } from './UserJob';
 
 import { CustomBaseEntity } from '@/common/base/baseEntity';
-import { SalaryUnit } from '@/common/constant';
+import { MAX_SALARY } from '@/common/constant';
 
 export enum JobType {
   FULL_TIME = 'Fulltime',
@@ -19,9 +20,17 @@ export enum JobType {
 }
 
 export enum JobStatus {
+  DRAFT = 'Draft',
   OPEN = 'Open',
-  CLOSE = 'Closed',
-  BLOCKED = 'Blocked'
+  CLOSED = 'Closed',
+  BLOCKED = 'Blocked',
+  DELETED = 'Deleted'
+}
+
+export enum PostInterval {
+  MONTH = 'one_month',
+  TWO_MONTHS = 'two_months',
+  THREE_MONTHS = 'three_months'
 }
 
 @ObjectType({ isAbstract: true })
@@ -29,17 +38,11 @@ export class Salary {
   @Field(() => Boolean, { defaultValue: false })
   isNegotiable: boolean;
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => Number, { defaultValue: MAX_SALARY })
   max: number;
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => Number, { defaultValue: 0 })
   min: number;
-
-  @Field(() => SalaryUnit, { defaultValue: SalaryUnit.MONTH })
-  unit: SalaryUnit;
-
-  @Field({ defaultValue: 'USD' })
-  currency: string;
 }
 
 @ObjectType({ isAbstract: true })
@@ -115,15 +118,37 @@ export class Job extends CustomBaseEntity {
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
+  @Field(() => [UserJob], { nullable: true })
+  @OneToMany(() => UserJob, userJob => userJob.job)
+  @JoinColumn({ name: 'id' })
+  userJobs: UserJob[];
+
+  @Field(() => PostInterval, { nullable: true })
+  @Column({ type: 'enum', enum: PostInterval, nullable: true })
+  postInterval: PostInterval;
+
+  @Field({ nullable: true })
+  @Column()
+  paymentUrl: string;
+
+  @Field({ nullable: true })
+  @Column()
+  resultUrl: string;
+
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
     const fields = [
       ['company'],
+      ['company', 'user'],
       ['addresses'],
       ['addresses', 'address'],
       ['skills'],
       ['skills', 'skill'],
       ['levels'],
-      ['levels', 'level']
+      ['levels', 'level'],
+      ['userJobs'],
+      ['userJobs', 'application'],
+      ['userJobs', 'application', 'CV'],
+      ['userJobs', 'user']
     ];
     return getJoinRelation(info, fields, withPagination, forceInclude);
   }

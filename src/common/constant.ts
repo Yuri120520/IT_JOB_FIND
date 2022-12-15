@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export const contentTypes = [
   'application/pdf',
   'image/jpeg',
@@ -51,8 +52,13 @@ export enum UserVerificationRequestType {
   RESET_PASSWORD = 'Reset password'
 }
 
-export enum SalaryUnit {
-  WEEK = 'WEEK',
-  MONTH = 'MONTH',
-  YEAR = 'YEAR'
-}
+export const MAX_SALARY = 10000;
+export const MIN_SALARY = 0;
+
+export const POST_INTERVAL_COST = {
+  one_month: 10,
+  two_months: 18,
+  three_months: 25
+};
+
+export const CONTENT_TYPE_OPEN_XML_FORMATS = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';

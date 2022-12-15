@@ -1,16 +1,15 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-import { JobStatus, JobType } from './Job';
-import { UserJobStatus } from './UserJob';
+import { InterviewMethod } from './Application';
+import { JobStatus, JobType, PostInterval } from './Job';
 
-import { Gender, SalaryUnit } from '@/common/constant';
+import { Gender } from '@/common/constant';
 
 registerEnumType(Gender, { name: 'Gender' });
-
-registerEnumType(SalaryUnit, { name: 'SalaryUnit' });
 
 registerEnumType(JobStatus, { name: 'JobStatus' });
 
 registerEnumType(JobType, { name: 'JobType' });
 
-registerEnumType(UserJobStatus, { name: 'UserJobStatus' });
+registerEnumType(InterviewMethod, { name: 'InterviewMethod' });
+registerEnumType(PostInterval, { name: 'PostInterval' });

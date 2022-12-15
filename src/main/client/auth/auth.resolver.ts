@@ -3,7 +3,7 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthClientService } from './auth.service';
 
 import { ResponseMessageBase } from '@/common/interfaces/returnBase';
-import { Public } from '@/decorators/public.decorator';
+import { Auth } from '@/decorators/auth.decorator';
 import { Context, GetContext } from '@/decorators/user.decorator';
 import {
   CodeVerifyDto,
@@ -20,7 +20,6 @@ import { ChangePasswordInput } from '@/main/shared/user/dto';
 import { UserService } from '@/main/shared/user/user.service';
 
 @Resolver()
-@Public()
 export class AuthClientResolver {
   constructor(private readonly service: AuthClientService, private readonly userService: UserService) {}
 
@@ -64,6 +63,7 @@ export class AuthClientResolver {
     return await this.service.signInGoogle(input);
   }
 
+  @Auth()
   @Mutation(() => ResponseMessageBase, { name: 'changePassword' })
   async changePassword(
     @Args('changePasswordInput') changePasswordInput: ChangePasswordInput,

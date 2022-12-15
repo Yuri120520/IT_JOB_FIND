@@ -9,7 +9,7 @@ import { User } from './User';
 import { CustomBaseEntity } from '@/common/base/baseEntity';
 
 @ObjectType({ isAbstract: true })
-@Entity('CV')
+@Entity('cv')
 export class CV extends CustomBaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
@@ -28,6 +28,7 @@ export class CV extends CustomBaseEntity {
   url: string;
 
   @Field(() => Boolean, { defaultValue: false })
+  @Column()
   isUsed: boolean;
 
   @Field(() => IUser)

@@ -15,7 +15,12 @@ export const ormconfig = async (hardCodeEnv?: string) => {
       migrationsDir: 'migrations',
       entitiesDir: 'entities'
     },
-    namingStrategy: new SnakeNamingStrategy()
+    namingStrategy: new SnakeNamingStrategy(),
+    extra: {
+      max: 10,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 10000
+    }
   };
   if (nodeEnv === APP_ENV.TEST) {
     typeOrmConfig = {

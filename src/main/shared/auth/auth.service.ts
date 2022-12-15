@@ -125,7 +125,6 @@ export class AuthService {
     }
 
     return await getManager().transaction(async transaction => {
-      console.log('object', data);
       const role = await Role.findOne({ name: data.role });
       if (role.name === ROLE.USER) {
         const { email, password, phoneNumber, fullName, gender } = data;
@@ -191,7 +190,7 @@ export class AuthService {
   }
 
   static getRefreshTokenExpireTime() {
-    const REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 60;
+    const REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000;
 
     return REFRESH_TOKEN_EXPIRE_TIME;
   }
@@ -207,7 +206,7 @@ export class AuthService {
 
     const refreshTokenExpire = AuthService.getRefreshTokenExpireTime();
 
-    if (new Date(token.lastUsed).getTime() - Date.now() > refreshTokenExpire) {
+    if (Date.now() - new Date(token.lastUsed).getTime() > refreshTokenExpire) {
       throw new BadRequestException(messageKey.BASE.REFRESH_TOKEN_EXPIRE);
     }
 

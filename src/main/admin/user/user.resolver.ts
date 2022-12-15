@@ -10,7 +10,7 @@ import { ChangeStatusOfUserInput } from '@/main/shared/user/dto';
 import { IUser } from '@/main/shared/user/interface';
 
 @Roles(ROLE.ADMIN)
-@Auth()
+@Auth(['Roles'])
 @Injectable()
 export class UserAdminResolver {
   constructor(private service: UserAdminService) {}

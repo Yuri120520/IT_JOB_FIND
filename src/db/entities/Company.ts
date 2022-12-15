@@ -26,7 +26,7 @@ export class Company extends CustomBaseEntity {
   @Column()
   name: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   website: string;
 
@@ -50,14 +50,12 @@ export class Company extends CustomBaseEntity {
   @Column({ type: 'text', array: true, nullable: true })
   certificates: string[];
 
-  @Field(() => [CompanyAddress])
+  @Field(() => [CompanyAddress], { nullable: true })
   @OneToMany(() => CompanyAddress, cd => cd.company)
-  @JoinColumn({ name: 'id' })
   companyAddresses: CompanyAddress[];
 
-  @Field(() => [CompanySkill])
+  @Field(() => [CompanySkill], { nullable: true })
   @OneToMany(() => CompanySkill, ck => ck.company)
-  @JoinColumn({ name: 'id' })
   companySkills: CompanySkill[];
 
   @Field(() => IUser)
@@ -73,10 +71,13 @@ export class Company extends CustomBaseEntity {
   static getRelations(info: GraphQLResolveInfo, withPagination?: boolean, forceInclude?: string[]): string[] {
     const fields = [
       ['companyAddresses'],
-      ['companyAddresses', 'address'],
       ['companySkills'],
       ['companySkills', 'skill'],
-      ['user']
+      ['user'],
+      ['jobs'],
+      ['jobs', 'company'],
+      ['jobs', 'addresses'],
+      ['jobs', 'addresses', 'address']
     ];
     return getJoinRelation(info, fields, withPagination, forceInclude);
   }

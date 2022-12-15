@@ -4,19 +4,21 @@ import {
   ArrayMinSize,
   ArrayNotEmpty,
   ArrayUnique,
+  IsBoolean,
   IsDate,
   IsEnum,
   IsIn,
-  IsNumber,
   IsOptional,
+  IsPositive,
   IsUUID,
-  Min,
+  Max,
   Validate,
   ValidateNested
 } from 'class-validator';
 
-import { SalaryUnit } from '@/common/constant';
-import { JobStatus, JobType } from '@/db/entities/Job';
+import { MAX_SALARY } from '@/common/constant';
+import { InterviewMethod } from '@/db/entities/Application';
+import { JobStatus, JobType, PostInterval } from '@/db/entities/Job';
 import { EntityExistingValidator } from '@/decorators/entityExistingValidator.decorator';
 
 @InputType()
@@ -43,23 +45,14 @@ export class SalaryDto {
 
   @Field(() => Number, { nullable: true })
   @IsOptional()
-  @IsNumber()
-  @Min(0)
+  @IsPositive()
+  @Max(MAX_SALARY)
   max: number;
 
   @Field(() => Number, { nullable: true })
   @IsOptional()
-  @IsNumber()
-  @Min(0)
+  @IsPositive()
   min: number;
-
-  @Field(() => SalaryUnit, { nullable: true })
-  @IsOptional()
-  @IsEnum(SalaryUnit)
-  unit: SalaryUnit;
-
-  @Field({ nullable: true })
-  currency: string;
 }
 @InputType()
 export class UpsertJobDto {
@@ -87,15 +80,10 @@ export class UpsertJobDto {
   @ArrayUnique()
   yearOfExperiences: number[];
 
-  @Field(() => Date, { nullable: true })
-  @IsOptional()
-  @IsDate()
-  closeDate: Date;
-
   @Field(() => JobStatus, { nullable: true })
   @IsOptional()
   @IsEnum(JobStatus)
-  @IsIn([JobStatus.OPEN, JobStatus.CLOSE], { message: 'Not allowed to choose blocked status for role.' })
+  @IsIn([JobStatus.OPEN, JobStatus.CLOSED], { message: 'Not allowed to choose blocked status for role.' })
   status: JobStatus;
 
   @Field(() => [String], { nullable: true })
@@ -124,4 +112,54 @@ export class UpsertJobDto {
   @ArrayUnique()
   @IsEnum(JobType, { each: true })
   types: JobType[];
+
+  @Field(() => PostInterval, { nullable: true })
+  @IsOptional()
+  @IsEnum(PostInterval)
+  postInterval: PostInterval;
+}
+
+@InputType()
+export class InterviewEventDto {
+  @Field(() => InterviewMethod)
+  @IsEnum(InterviewMethod)
+  method: InterviewMethod;
+
+  @Field({ nullable: true })
+  address: string;
+}
+@InputType()
+export class InterviewResponseDto {
+  @Field(() => Date)
+  @IsDate()
+  startTime: Date;
+
+  @Field(() => Date)
+  @IsDate()
+  endTime: Date;
+
+  @Field(() => [InterviewEventDto])
+  @ValidateNested({ each: true })
+  @Type(() => InterviewEventDto)
+  events: InterviewEventDto[];
+}
+
+@InputType()
+export class ReplyApplicationDto {
+  @Field(() => ID)
+  @Validate(EntityExistingValidator, ['application'])
+  id: string;
+
+  @Field(() => Boolean)
+  @IsBoolean()
+  isAccept: boolean;
+
+  @Field()
+  message: string;
+
+  @Field(() => InterviewResponseDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => InterviewResponseDto)
+  interview: InterviewResponseDto;
 }
